@@ -21,6 +21,7 @@
           pkgs.vim
           pkgs.iterm2
           pkgs.bitwarden-cli
+          pkgs.nerdfonts
         ];
 
       # Auto upgrade nix package and the daemon service.
