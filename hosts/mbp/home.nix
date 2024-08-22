@@ -1,10 +1,7 @@
 { pkgs, ... }: {
 home-manager.useGlobalPkgs = true;
 home-manager.useUserPackages = true;
-# users.users.sefe = {
-#         name = "sefe";
-#         home = "/Users/sefe";
-#       };
+
 home-manager.users.sefe = { pkgs, ... }: {
         home.stateVersion = "24.05";
 
