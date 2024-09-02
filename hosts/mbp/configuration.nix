@@ -7,6 +7,8 @@
           pkgs.iterm2
           pkgs.bitwarden-cli
           pkgs.nerdfonts
+          pkgs.mtr-gui
+          pkgs.asdf-vm
         ];
 
       # Auto upgrade nix package and the daemon service.
