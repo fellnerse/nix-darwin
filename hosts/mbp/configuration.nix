@@ -29,6 +29,14 @@
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "aarch64-darwin";
 
+      # Add ability to used TouchID for sudo authentication
+      security.pam.enableSudoTouchIdAuth = true;  
+
+      # Fonts
+      fonts.packages = with pkgs; [
+        recursive
+        (nerdfonts.override { fonts = [ "Monaspace" ]; })
+      ];
 
       homebrew = {
         enable = true;
