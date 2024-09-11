@@ -5,7 +5,6 @@
         [ 
           pkgs.vim
           pkgs.iterm2
-          pkgs.bitwarden-cli
           pkgs.nerdfonts
           pkgs.mtr-gui
           pkgs.asdf-vm
