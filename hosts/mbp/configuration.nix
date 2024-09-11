@@ -7,7 +7,7 @@
           pkgs.iterm2
           pkgs.nerdfonts
           pkgs.mtr-gui
-          pkgs.asdf-vm
+          pkgs.asdf-vm # need to also load fish autocompletions in the fish init further down
         ];
 
       # Auto upgrade nix package and the daemon service.
@@ -19,7 +19,13 @@
 
       # Create /etc/zshrc that loads the nix-darwin environment.
       programs.zsh.enable = true;  # default shell on catalina
-      programs.fish.enable = true; # https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1782971499
+      programs.fish = {
+        enable = true; # https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1782971499
+        # ... other things here
+        interactiveShellInit = ''
+          source "${pkgs.asdf-vm}/share/asdf-vm/completions/asdf.fish"
+        '';
+      };
       environment.shells = [ pkgs.bashInteractive pkgs.zsh pkgs.fish ];      
 
       # Set Git commit hash for darwin-version.
