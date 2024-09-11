@@ -23,6 +23,7 @@
         enable = true; # https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1782971499
         # ... other things here
         interactiveShellInit = ''
+          source "${pkgs.asdf-vm}/share/asdf-vm/asdf.fish"
           source "${pkgs.asdf-vm}/share/asdf-vm/completions/asdf.fish"
         '';
       };
