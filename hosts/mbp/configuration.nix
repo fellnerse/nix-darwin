@@ -1,4 +1,12 @@
 { self, pkgs, ... }: {
+      # The `system.stateVersion` option is not defined in your
+      # nix-darwin configuration. The value is used to conditionalize
+      # backwards‐incompatible changes in default settings. You should
+      # usually set this once when installing nix-darwin on a new system
+      # and then never change it (at least without reading all the relevant
+      # entries in the changelog using `darwin-rebuild changelog`).
+      system.stateVersion = 5;
+      
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       environment.systemPackages =
