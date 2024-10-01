@@ -19,12 +19,6 @@
       system = "aarch64-darwin";
       overlay-unstable = final: prev: {
         unstable = nixpkgs-unstable.legacyPackages.${prev.system};
-        # use this variant if unfree packages are needed:
-        # unstable = import nixpkgs-unstable {
-        #   inherit system;
-        #   config.allowUnfree = true;
-        # };
-
       };
     in
   {
@@ -33,7 +27,7 @@
     darwinConfigurations."Sebastians-MacBook-Pro-2" = nix-darwin.lib.darwinSystem {
       inherit system;
       # needed so we can pass self down to the other modules
-      specialArgs = { inherit self inputs; };
+      specialArgs = { inherit self; };
       modules = [
         # Overlays-module makes "pkgs.unstable" available in configuration.nix
         ({ config, pkgs, ... }: { nixpkgs.overlays = [ overlay-unstable ]; }) 

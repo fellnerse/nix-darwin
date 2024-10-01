@@ -1,11 +1,5 @@
-{ self, pkgs, inputs, config, pkgsUnstable, ... }:
-
+{ self, pkgs, ... }:
  {
-    # this allows you to access `pkgsUnstable` anywhere in your config
-  _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
-    inherit (pkgs.stdenv.hostPlatform) system;
-    inherit (config.nixpkgs) config;
-  };
       # The `system.stateVersion` option is not defined in your
       # nix-darwin configuration. The value is used to conditionalize
       # backwards‐incompatible changes in default settings. You should
@@ -17,7 +11,7 @@
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       
-      environment.systemPackages = (with pkgs;
+      environment.systemPackages = with pkgs;
         [ 
           vim
           iterm2
@@ -26,10 +20,7 @@
           asdf-vm # need to also load fish autocompletions in the fish init further down
           # pkgs.openmoji-color # font with openmoji emojis
           unstable.screen-pipe
-        ]) ++
-        (with pkgsUnstable; [
-          # screen-pipe
-        ]);
+        ];
 
       # Auto upgrade nix package and the daemon service.
       services.nix-daemon.enable = true;
