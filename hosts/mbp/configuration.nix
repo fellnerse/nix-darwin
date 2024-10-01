@@ -25,9 +25,10 @@
           mtr-gui
           asdf-vm # need to also load fish autocompletions in the fish init further down
           # pkgs.openmoji-color # font with openmoji emojis
+          unstable.screen-pipe
         ]) ++
         (with pkgsUnstable; [
-          screen-pipe
+          # screen-pipe
         ]);
 
       # Auto upgrade nix package and the daemon service.
