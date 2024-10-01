@@ -1,4 +1,4 @@
-{ self, pkgs, ... }: {
+{ self, pkgs, nixpkgs-unstable, ... }: {
       # The `system.stateVersion` option is not defined in your
       # nix-darwin configuration. The value is used to conditionalize
       # backwards‐incompatible changes in default settings. You should
@@ -6,17 +6,35 @@
       # and then never change it (at least without reading all the relevant
       # entries in the changelog using `darwin-rebuild changelog`).
       system.stateVersion = 5;
-      
+      # nixpkgs.config.allowBroken = true;
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
-      environment.systemPackages =
-        [ 
-          pkgs.vim
-          pkgs.iterm2
-          pkgs.nerdfonts
-          pkgs.mtr-gui
-          pkgs.asdf-vm # need to also load fish autocompletions in the fish init further down
-        ];
+      # environment.systemPackages = with pkgs;
+      #   [ 
+      #     vim
+      #     iterm2
+      #     nerdfonts
+      #     mtr-gui
+      #     asdf-vm # need to also load fish autocompletions in the fish init further down
+      #     # pkgs.openmoji-color # font with openmoji emojis
+      #   ] ++ with nixpkgs-unstable; [
+      #     screen-pipe
+      #   ];
+  environment.systemPackages = 
+    let
+      stablePackages = with pkgs; [
+        vim
+        iterm2
+        nerdfonts
+        mtr-gui
+        asdf-vm # need to also load fish autocompletions in the fish init further down
+        # pkgs.openmoji-color # font with openmoji emojis
+      ];
+      unstablePackages = with nixpkgs-unstable; [
+        screen-pipe
+      ];
+    in
+      stablePackages ++ unstablePackages;
 
       # Auto upgrade nix package and the daemon service.
       services.nix-daemon.enable = true;
@@ -54,12 +72,17 @@
 
       homebrew = {
         enable = true;
-        onActivation.autoUpdate = true;
         # updates homebrew packages on activation,
         # can make darwin-rebuild much slower (otherwise i'd forget to do it ever though)
+        onActivation.autoUpdate = true;
         casks = [
-          "bitwarden"
+          # "bitwarden" the cask version does not support fingerprint auth enymore
+          "signal"
+          "arc"
         ];
+        masApps = {
+          "Bitwarden" = 1352778147;
+        };
       };
 
       users.users.sefe = {

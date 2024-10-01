@@ -1,9 +1,15 @@
-{ pkgs, ... }: {
+{ pkgs,allowed-unfree-packages, ... }: {
 home-manager.useGlobalPkgs = true;
 home-manager.useUserPackages = true;
+home-manager.extraSpecialArgs = {inherit allowed-unfree-packages;};
+
 
 home-manager.users.sefe = { pkgs, ... }: {
         home.stateVersion = "24.05";
+
+        home.packages = [
+          # pkgs.teams
+        ];
 
         programs.tmux = { # my tmux configuration, for example
           enable = true;
