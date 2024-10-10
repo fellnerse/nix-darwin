@@ -19,10 +19,6 @@
           mtr-gui
           asdf-vm # need to also load fish autocompletions in the fish init further down
           # pkgs.openmoji-color # font with openmoji emojis
-          gnumake
-          bun
-          ffmpeg
-          tesseract
         ];
 
       # Auto upgrade nix package and the daemon service.

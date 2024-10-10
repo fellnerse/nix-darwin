@@ -14,7 +14,6 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     mac-app-util.url = "github:hraban/mac-app-util";
-    mac-app-util.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, nixpkgs-unstable, home-manager, mac-app-util, ... }:
@@ -30,8 +29,9 @@
     darwinConfigurations."Sebastians-MacBook-Pro-2" = nix-darwin.lib.darwinSystem {
       inherit system;
       # needed so we can pass self down to the other modules
-      specialArgs = { inherit self; };
+      specialArgs = { inherit self mac-app-util; };
       modules = [
+        # this is needed to create trampolines for applications (.app) otherwise spotlight won't find them
         mac-app-util.darwinModules.default
         # Overlays-module makes "pkgs.unstable" available in configuration.nix
         ({ config, pkgs, ... }: { nixpkgs.overlays = [ overlay-unstable ]; }) 
