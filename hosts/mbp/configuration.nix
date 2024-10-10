@@ -23,8 +23,6 @@
           bun
           ffmpeg
           tesseract
-          unstable.screen-pipe
-          
         ];
 
       # Auto upgrade nix package and the daemon service.
