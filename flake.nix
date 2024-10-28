@@ -72,6 +72,7 @@
         in
         {
           default = pkgs.mkShellNoCC {
+            # can add default packages here
             packages = [ ] ++ pre-commit.enabledPackages;
             inherit (pre-commit) shellHook;
           };
@@ -87,6 +88,7 @@
               enable = true;
               package = inputs.nixpkgs-unstable.legacyPackages.${system}.flake-checker;
             };
+            # this tries to run with argument
             # flake-lock = {
             #   enable = true;
             #   name = "Check flake.lock";
