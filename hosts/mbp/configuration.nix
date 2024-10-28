@@ -1,4 +1,9 @@
-{ self, pkgs, lib, ... }:
+{
+  self,
+  pkgs,
+  lib,
+  ...
+}:
 {
   # The `system.stateVersion` option is not defined in your
   # nix-darwin configuration. The value is used to conditionalize
@@ -11,16 +16,15 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
 
-  environment.systemPackages = with pkgs;
-    [
-      vim
-      iterm2
-      nerdfonts
-      mtr-gui
-      asdf-vm # need to also load fish autocompletions in the fish init further down
-      # pkgs.openmoji-color # font with openmoji emojis
-      nixpkgs-fmt
-    ];
+  environment.systemPackages = with pkgs; [
+    vim
+    iterm2
+    nerdfonts
+    mtr-gui
+    asdf-vm # need to also load fish autocompletions in the fish init further down
+    # pkgs.openmoji-color # font with openmoji emojis
+    nixpkgs-fmt
+  ];
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
@@ -32,10 +36,14 @@
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh.enable = true; # default shell on catalina
   programs.fish.enable = true;
-  
+
   # users.users.sefe.shell = pkgs.fish;
   # users.defaultUserShell = pkgs.fish;
-  environment.shells = [ pkgs.bashInteractive pkgs.zsh pkgs.fish ];
+  environment.shells = [
+    pkgs.bashInteractive
+    pkgs.zsh
+    pkgs.fish
+  ];
 
   # Set Git commit hash for darwin-version.
   system.configurationRevision = self.rev or self.dirtyRev or null;
@@ -74,7 +82,11 @@
 
   nix.gc = {
     automatic = true;
-    interval = { Weekday = 0; Hour = 0; Minute = 0; };
+    interval = {
+      Weekday = 0;
+      Hour = 0;
+      Minute = 0;
+    };
     options = "--delete-older-than 30d";
   };
 }
