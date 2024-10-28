@@ -30,13 +30,6 @@
       }
     ];
   };
-
-  # add my custom stuff to fish config
-  xdg.configFile.iterm-integration = {
-    source = ./config.cloud.fish;
-    target = "fish/conf.d/config.fish";
-  };
-
   programs.starship = {
     enable = true;
     settings = {
@@ -46,6 +39,12 @@
       status.disabled = false;
       sudo.disabled = false;
     };
+  };
+
+  # add my custom stuff to fish config
+  xdg.configFile.iterm-integration = {
+    source = ./config.cloud.fish;
+    target = "fish/conf.d/config.fish";
   };
 
   # programs to run on startup
