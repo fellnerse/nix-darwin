@@ -36,6 +36,7 @@
         interactiveShellInit = ''
           source "${pkgs.asdf-vm}/share/asdf-vm/asdf.fish"
           source "${pkgs.asdf-vm}/share/asdf-vm/completions/asdf.fish"
+          complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); aws_completer | sed \'s/ $//\'; end)'
         '';
         # FIXME: This is needed to address bug where the $PATH is re-ordered by
         # the `path_helper` tool, prioritising Apple’s tools over the ones we’ve
@@ -44,7 +45,7 @@
         # This gist explains the issue in more detail: https://gist.github.com/Linerre/f11ad4a6a934dcf01ee8415c9457e7b2
         # There is also an issue open for nix-darwin: https://github.com/LnL7/nix-darwin/issues/122
         loginShellInit = let
-        # We should probably use `config.environment.profiles`, as described in
+        # We should probably use `config.environment.profiles`, as described ino
         # https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
         # but this takes into account the new XDG paths used when the nix
         # configuration has `use-xdg-base-directories` enabled. See:

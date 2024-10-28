@@ -3,6 +3,9 @@ home-manager.useGlobalPkgs = true;
 home-manager.useUserPackages = true;
 home-manager.extraSpecialArgs = {inherit allowed-unfree-packages;};
 
+home-manager.sharedModules = [
+  mac-app-util.homeManagerModules.default
+];
 
 home-manager.users.sefe = { pkgs, ... }: {
         home.stateVersion = "24.05";
@@ -10,23 +13,23 @@ home-manager.users.sefe = { pkgs, ... }: {
         home.packages = [
           # pkgs.teams
         ];
-        imports = [
-          mac-app-util.homeManagerModules.default
-        ];
 
-        programs.tmux = { # my tmux configuration, for example
+        programs.direnv = {
           enable = true;
-          keyMode = "vi";
-          clock24 = true;
-          historyLimit = 10000;
-          plugins = with pkgs.tmuxPlugins; [
-            vim-tmux-navigator
-            gruvbox
-          ];
-          extraConfig = ''
-            new-session -s main
-            bind-key -n C-a send-prefix
-          '';
+          nix-direnv.enable = true;
         };
+
+        # programs to run on startup
+        # xsession.windowManager.bspwm.startupPrograms = [
+        #   "iTerm2"
+        # ];
+        launchd.agents = {
+    iterm2 = {
+        enable = true;
+        config = {
+            Program = "/run/current-system/sw/bin/iterm2";
+            RunAtLoad = true;
+        };
+    };};
       };
 }
