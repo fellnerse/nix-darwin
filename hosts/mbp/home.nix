@@ -1,18 +1,11 @@
-{
-  pkgs,
-  allowed-unfree-packages,
-  mac-app-util,
-  ...
-}:
+{ pkgs, inputs, ... }:
 {
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = "backup";
-  home-manager.extraSpecialArgs = {
-    inherit allowed-unfree-packages;
-  };
 
-  home-manager.sharedModules = [ mac-app-util.homeManagerModules.default ];
+  # this is needed to create trampolines for applications (.app) otherwise spotlight won't find them
+  home-manager.sharedModules = [ inputs.mac-app-util.homeManagerModules.default ];
 
   home-manager.users.sefe =
     { pkgs, ... }:

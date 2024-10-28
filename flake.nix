@@ -30,40 +30,40 @@
       ...
     }:
     let
-      system = "aarch64-darwin";
-      overlay-unstable = final: prev: { unstable = nixpkgs-unstable.legacyPackages.${prev.system}; };
-      forAllSystems = nixpkgs.lib.genAttrs [ system ];
+      systems = [ "aarch64-darwin" ];
+      forAllSystems = nixpkgs.lib.genAttrs [ systems ];
     in
     {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#Sebastians-MacBook-Pro-2
       darwinConfigurations."Sebastians-MacBook-Pro-2" = nix-darwin.lib.darwinSystem {
-        inherit system;
+        system = "aarch64-darwin";
         # needed so we can pass self down to the other modules
         specialArgs = {
-          inherit self mac-app-util;
+          inherit self inputs;
         };
         modules = [
-          # this is needed to create trampolines for applications (.app) otherwise spotlight won't find them
-          mac-app-util.darwinModules.default
-          # Overlays-module makes "pkgs.unstable" available in configuration.nix
-          (
-            { config, pkgs, ... }:
-            {
-              nixpkgs.overlays = [ overlay-unstable ];
-            }
-          )
-          home-manager.darwinModules.home-manager
           ./hosts/mbp/configuration.nix
           ./hosts/mbp/home.nix
+          home-manager.darwinModules.home-manager
         ];
       };
 
       # Expose the package set, including overlays, for convenience.
       darwinPackages = self.darwinConfigurations."Sebastians-MacBook-Pro-2".pkgs;
 
+      overlays = {
+        unstable-packages = final: _prev: {
+          unstable = import inputs.nixpkgs-unstable {
+            system = final.system;
+            config.allowUnfree = true;
+          };
+        };
+      };
+
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
 
+      # default stuff installed in devshells
       devShells = forAllSystems (
         system:
         let
@@ -79,6 +79,7 @@
         }
       );
 
+      # pre-commit hooks for this repo
       checks = forAllSystems (system: {
         pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
           src = ./.;
