@@ -2,6 +2,7 @@
   self,
   pkgs,
   lib,
+  inputs,
   ...
 }:
 {
@@ -81,6 +82,18 @@
   users.users.sefe = {
     name = "sefe";
     home = "/Users/sefe";
+  };
+
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    backupFileExtension = "backup";
+    # this is needed to create trampolines for applications (.app) otherwise spotlight won't find them
+    sharedModules = [ inputs.mac-app-util.homeManagerModules.default ];
+    users.sefe = import ./home.nix;
+    extraSpecialArgs = {
+      inherit inputs;
+    };
   };
 
   nix.gc = {

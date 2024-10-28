@@ -31,7 +31,7 @@
     }:
     let
       systems = [ "aarch64-darwin" ];
-      forAllSystems = nixpkgs.lib.genAttrs [ systems ];
+      forAllSystems = nixpkgs.lib.genAttrs systems;
     in
     {
       # Build darwin flake using:
@@ -44,13 +44,9 @@
         };
         modules = [
           ./hosts/mbp/configuration.nix
-          ./hosts/mbp/home.nix
           home-manager.darwinModules.home-manager
         ];
       };
-
-      # Expose the package set, including overlays, for convenience.
-      darwinPackages = self.darwinConfigurations."Sebastians-MacBook-Pro-2".pkgs;
 
       overlays = {
         unstable-packages = final: _prev: {
