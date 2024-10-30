@@ -74,20 +74,7 @@
   security.pam.enableSudoTouchIdAuth = true;
 
   # homebrew should be used for GUI applications
-  homebrew = {
-    enable = true;
-    # updates homebrew packages on activation,
-    # can make darwin-rebuild much slower (otherwise i'd forget to do it ever though)
-    onActivation.autoUpdate = true;
-    casks = [
-      # "bitwarden" the cask version does not support fingerprint auth enymore
-      "signal"
-      "arc"
-    ];
-    masApps = {
-      "Bitwarden" = 1352778147;
-    };
-  };
+  homebrew = import ./homebrew.nix;
 
   users.users.sefe = {
     name = "sefe";
@@ -106,8 +93,9 @@
     };
   };
 
-  # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh.enable = true; # default shell on catalina
-  programs.fish.enable = true;
-
+  programs = {
+    # Create /etc/zshrc that loads the nix-darwin environment.
+    zsh.enable = true;
+    fish.enable = true;
+  };
 }
