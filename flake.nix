@@ -7,6 +7,9 @@
     # https://nixos.wiki/wiki/Flakes#Importing_packages_from_multiple_channels
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    lix-module.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.1-1.tar.gz";
+    lix-module.inputs.nixpkgs.follows = "nixpkgs";
+
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -24,6 +27,7 @@
       self,
       nix-darwin,
       nixpkgs,
+      lix-module,
       nixpkgs-unstable,
       home-manager,
       mac-app-util,
@@ -45,6 +49,8 @@
         modules = [
           ./hosts/mbp/configuration.nix
           home-manager.darwinModules.home-manager
+          lix-module.nixosModules.lixFromNixpkgs
+          self.nixosModules.current-lix
         ];
       };
 
@@ -55,6 +61,11 @@
             config.allowUnfree = true;
           };
         };
+        current-lix = final: _prev: { lix = inputs.nixpkgs-unstable.legacyPackages.${final.system}.lix; };
+      };
+
+      nixosModules.current-lix = {
+        nixpkgs.overlays = [ self.overlays.current-lix ];
       };
 
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
