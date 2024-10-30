@@ -4,6 +4,12 @@ update:
 rebuild:
 	darwin-rebuild switch --flake .#Sebastians-MacBook-Pro-2
 
+check:
+	darwin-rebuild check --flake .#Sebastians-MacBook-Pro-2
+
+build:
+	darwin-rebuild build --flake .#Sebastians-MacBook-Pro-2
+
 switch:
 	nix run nix-darwin -- switch --flake ~/.config/nix-darwin
 
