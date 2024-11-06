@@ -1,6 +1,8 @@
 { pkgs, inputs, ... }:
 {
   home = {
+    username = "sefe";
+    homeDirectory = "/Users/sefe";
     stateVersion = "24.05";
     packages = [
       # pkgs.teams
@@ -8,6 +10,7 @@
     ];
   };
 
+  programs.home-manager.enable = true;
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;

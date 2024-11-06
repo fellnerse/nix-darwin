@@ -48,10 +48,21 @@
         };
         modules = [
           ./hosts/mbp/configuration.nix
-          home-manager.darwinModules.home-manager
           lix-module.nixosModules.lixFromNixpkgs
           self.nixosModules.current-lix
         ];
+      };
+
+      # Standalone home-manager configuration entrypoint
+      # Available through 'home-manager switch --flake .#sefe'
+      homeConfigurations = {
+        "sefe" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+          extraSpecialArgs = {
+            inherit self inputs;
+          };
+          modules = [ ./home-manager/home.nix ];
+        };
       };
 
       overlays = {

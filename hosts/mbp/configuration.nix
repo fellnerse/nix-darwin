@@ -50,6 +50,7 @@
       asdf-vm # need to also load fish autocompletions in the fish init further down
       # pkgs.openmoji-color # font with openmoji emojis
       nixpkgs-fmt
+      home-manager
     ];
     # these shells are configured for nix
     shells = [
@@ -79,18 +80,6 @@
   users.users.sefe = {
     name = "sefe";
     home = "/Users/sefe";
-  };
-
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    backupFileExtension = "backup";
-    # this is needed to create trampolines for applications (.app) otherwise spotlight won't find them
-    sharedModules = [ inputs.mac-app-util.homeManagerModules.default ];
-    users.sefe = import ./home.nix;
-    extraSpecialArgs = {
-      inherit inputs;
-    };
   };
 
   programs = {
