@@ -69,6 +69,18 @@
   system = {
     stateVersion = 5;
     configurationRevision = self.rev or self.dirtyRev or null;
+
+    defaults.CustomUserPreferences = {
+      "com.apple.WindowManager" = {
+        EnableTiledWindowMargins = 0;
+      };
+    };
+
+    # normally you would need to logout login so preferences take effect
+    activationScripts.postUserActivation.text = ''
+      # Following line should allow us to avoid a logout/login cycle
+      /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+    '';
   };
 
   # Add ability to used TouchID for sudo authentication

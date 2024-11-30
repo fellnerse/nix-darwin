@@ -9,7 +9,7 @@
       pkgs.nix-your-shell
     ];
   };
-  
+
   programs.home-manager.enable = true;
   programs.direnv = {
     enable = true;
