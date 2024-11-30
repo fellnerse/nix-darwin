@@ -82,6 +82,11 @@
     home = "/Users/sefe";
   };
 
+  users.users.private = {
+    name = "private";
+    home = "/Users/private";
+  };
+
   programs = {
     # Create /etc/zshrc that loads the nix-darwin environment.
     zsh.enable = true;

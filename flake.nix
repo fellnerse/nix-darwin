@@ -54,7 +54,7 @@
       };
 
       # Standalone home-manager configuration entrypoint
-      # Available through 'home-manager switch --flake .#sefe'
+      # Available through 'home-manager switch --flake .#sefe -b backup'
       homeConfigurations = {
         "sefe" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.aarch64-darwin;
@@ -62,6 +62,13 @@
             inherit self inputs;
           };
           modules = [ ./home-manager/home.nix ];
+        };
+        "private" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+          extraSpecialArgs = {
+            inherit self inputs;
+          };
+          modules = [ ./home-manager/home-private.nix ];
         };
       };
 
