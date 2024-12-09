@@ -11,5 +11,6 @@
   masApps = {
     "Bitwarden" = 1352778147;
     "ExcalidrawZ" = 6636493997;
+    "Tailscale" = 1475387142;
   };
 }

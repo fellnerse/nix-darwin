@@ -70,6 +70,7 @@
     stateVersion = 5;
     configurationRevision = self.rev or self.dirtyRev or null;
 
+    # can be found by running: `defaults find ${word}`
     defaults.CustomUserPreferences = {
       "com.apple.WindowManager" = {
         EnableTiledWindowMargins = 0;
