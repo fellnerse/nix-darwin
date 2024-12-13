@@ -42,4 +42,9 @@ set -x AWS_DEFAULT_REGION eu-central-1
 # use nano instead of vi for editor stuff
 set -x EDITOR nano
 
+# todo ask miguel why I have to write this myself and why nix-your-shell is not doing this
+function develop --wraps='nix develop'
+  env ANY_NIX_SHELL_PKGS=(basename (pwd))"#"(git describe --tags --dirty) (type -P nix) develop --command fish
+end
+
 # source /opt/homebrew/opt/asdf/libexec/asdf.fish
