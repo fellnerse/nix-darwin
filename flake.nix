@@ -2,8 +2,8 @@
   description = "Example Darwin system flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
-    # how to use stable and unstable at the same time 
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin";
+    # how to use stable and unstable at the same time
     # https://nixos.wiki/wiki/Flakes#Importing_packages_from_multiple_channels
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -113,13 +113,14 @@
             flake-checker = {
               enable = true;
               package = inputs.nixpkgs-unstable.legacyPackages.${system}.flake-checker;
+              entry = "flake-checker -f --no-telemetry --check-supported false";
             };
-            # this tries to run with argument
-            # flake-lock = {
-            #   enable = true;
-            #   name = "Check flake.lock";
-            #   entry = "nix flake lock";
-            # };
+            flake-lock = {
+              enable = true;
+              name = "Check flake.lock";
+              entry = "nix flake lock";
+              files = "(^flake\\.lock$)";
+            };
           };
         };
       });

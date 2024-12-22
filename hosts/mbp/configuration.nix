@@ -23,6 +23,7 @@
         "nix-command"
         "flakes"
       ];
+      warn-dirty = false;
       substituters = [
         "https://nix-community.cachix.org"
         "https://tweag-nickel.cachix.org"

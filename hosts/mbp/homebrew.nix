@@ -7,6 +7,8 @@
     # "bitwarden" the cask version does not support fingerprint auth enymore
     "signal"
     "arc"
+    "blender"
+    "bambu-studio"
   ];
   masApps = {
     "Bitwarden" = 1352778147;
