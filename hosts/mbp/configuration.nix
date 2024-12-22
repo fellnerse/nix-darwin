@@ -45,7 +45,6 @@
   environment = {
     systemPackages = with pkgs; [
       vim
-      iterm2 # todo install with homebrew
       nerdfonts
       mtr-gui
       asdf-vm # need to also load fish autocompletions in the fish init further down

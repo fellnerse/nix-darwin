@@ -9,6 +9,7 @@
     "arc"
     "blender"
     "bambu-studio"
+    "iterm2"
   ];
   masApps = {
     "Bitwarden" = 1352778147;
