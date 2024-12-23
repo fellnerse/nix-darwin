@@ -29,6 +29,8 @@ abbr -a tg terragrunt
 abbr -a gpt sgpt
 abbr -a n nano
 abbr -a jwt_iat_exp "jwt -p | jq -s 'select(. != null) | .[1] | {issued_at: (.iat | strftime(\"%Y-%m-%d %H:%M:%S\")), expired_at: (.exp | strftime(\"%Y-%m-%d %H:%M:%S\"))}'"
+abbr -a ls eza
+abbr -a cat bat
 
 # jetbrains toolbox
 export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"

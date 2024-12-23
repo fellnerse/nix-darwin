@@ -33,6 +33,8 @@
         "tweag-nickel.cachix.org-1:GIthuiK4LRgnW64ALYEoioVUQBWs0jexyoYVeLDBwRA="
       ];
     };
+    optimise.automatic = true;
+    registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
   };
 
   nixpkgs = {
