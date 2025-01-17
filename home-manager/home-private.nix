@@ -33,6 +33,7 @@
       }
     ];
   };
+
   programs.starship = {
     enable = true;
     settings = {
@@ -43,6 +44,29 @@
       sudo.disabled = false;
     };
   };
+
+  programs.git = {
+    enable = true;
+    delta.enable = true;
+    aliases = {
+      s = "status -s";
+    };
+  };
+
+  programs.eza = {
+    enable = true;
+    icons = "always";
+  };
+
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "gruvbox-dark";
+    };
+  };
+
+  programs.fzf.enable = true;
+  programs.jq.enable = true;
 
   # add my custom stuff to fish config
   xdg.configFile.iterm-integration = {
