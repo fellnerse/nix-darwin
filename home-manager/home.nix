@@ -1,4 +1,9 @@
-{ pkgs, inputs, ... }:
+{
+  pkgs,
+  inputs,
+  lib,
+  ...
+}:
 {
   home = {
     username = "sefe";
@@ -39,9 +44,17 @@
     settings = {
       git_commit.only_detached = false;
       time.disabled = false;
-      direnv.disabled = false;
+      direnv.disabled = true;
       status.disabled = false;
       sudo.disabled = false;
+      aws.disabled = true;
+      gcloud.disabled = true;
+      azure.disabled = false;
+      nix_shell.disabled = true;
+      line_break.disabled = false;
+      directory = {
+        truncate_to_repo = true;
+      };
     };
   };
 
