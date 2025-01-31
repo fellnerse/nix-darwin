@@ -53,6 +53,7 @@
       # pkgs.openmoji-color # font with openmoji emojis
       nixpkgs-fmt
       home-manager
+      yq-go
     ];
     # these shells are configured for nix
     shells = [
