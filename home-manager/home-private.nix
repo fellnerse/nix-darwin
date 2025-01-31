@@ -79,7 +79,7 @@
     iterm2 = {
       enable = true;
       config = {
-        Program = "/run/current-system/sw/bin/iterm2";
+        Program = "/Applications/iTerm.app/Contents/MacOS/iTerm2";
         RunAtLoad = true;
       };
     };
