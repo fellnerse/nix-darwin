@@ -11,6 +11,7 @@
     "bambu-studio"
     "iterm2"
     "whisky"
+    "sonos"
   ];
   masApps = {
     "Bitwarden" = 1352778147;
