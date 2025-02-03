@@ -78,6 +78,9 @@
       "com.apple.WindowManager" = {
         EnableTiledWindowMargins = 0;
       };
+      "com.apple.dock" = {
+        no-bouncing = true;
+      };
     };
 
     # normally you would need to logout login so preferences take effect

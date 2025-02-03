@@ -7,16 +7,13 @@
     # "bitwarden" the cask version does not support fingerprint auth enymore
     "signal"
     "arc"
-    "blender"
     "bambu-studio"
     "iterm2"
     "whisky"
-    "sonos"
     "obsidian"
   ];
   masApps = {
     "Bitwarden" = 1352778147;
-    "ExcalidrawZ" = 6636493997;
     "Tailscale" = 1475387142;
   };
 }
