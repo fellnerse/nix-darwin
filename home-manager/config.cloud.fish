@@ -50,3 +50,27 @@ function develop --wraps='nix develop'
 end
 
 # source /opt/homebrew/opt/asdf/libexec/asdf.fish
+
+function git-cleanup-branches
+    # Delete local branches that have been merged
+    set local_branches (git branch --merged | grep -v '\*' | grep -v 'master' | grep -v 'main')
+    if test -n "$local_branches"
+        echo $local_branches | xargs -n 1 git branch -d
+        echo "Merged local branches have been deleted."
+    else
+        echo "No merged local branches to delete."
+    end
+
+    # Prune remote-tracking branches and delete local branches with no remote
+    git fetch --all -p
+    set remote_branches (git for-each-ref --format '%(refname:short) %(upstream:track)' refs/heads | awk '$2 == "[gone]" {print $1}')
+    if test -n "$remote_branches"
+        for branch in $remote_branches
+            git branch -D $branch
+            echo "Deleted branch: $branch"
+        end
+        echo "Branches with no remote have been deleted."
+    else
+        echo "No branches with deleted remotes found."
+    end
+end
