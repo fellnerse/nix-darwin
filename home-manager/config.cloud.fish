@@ -35,6 +35,9 @@ set -x AWS_DEFAULT_REGION eu-central-1
 # use nano instead of vi for editor stuff
 set -x EDITOR nano
 
+# git diff with delta should be able to use mouse scroll
+set -x LESS --redraw-on-quit
+
 # todo ask miguel why I have to write this myself and why nix-your-shell is not doing this
 function develop --wraps='nix develop'
   env ANY_NIX_SHELL_PKGS=(basename (pwd))"#"(git describe --tags --dirty) (type -P nix) develop --command fish

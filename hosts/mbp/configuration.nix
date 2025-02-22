@@ -55,6 +55,7 @@
       yq-go
       nix-search-cli
       openscad
+      less
     ];
     # these shells are configured for nix
     shells = [

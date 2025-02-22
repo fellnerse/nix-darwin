@@ -47,7 +47,9 @@
 
   programs.git = {
     enable = true;
-    delta.enable = true;
+    delta = {
+      enable = true;
+    };
     aliases = {
       s = "status -s";
     };
