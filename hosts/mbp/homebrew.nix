@@ -3,6 +3,10 @@
   # updates homebrew packages on activation,
   # can make darwin-rebuild much slower (otherwise i'd forget to do it ever though)
   onActivation.autoUpdate = true;
+  brews = [
+    "baobab"
+    "glib"
+  ];
   casks = [
     # "bitwarden" the cask version does not support fingerprint auth enymore
     "signal"
