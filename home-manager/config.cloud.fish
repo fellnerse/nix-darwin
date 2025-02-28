@@ -38,6 +38,9 @@ set -x EDITOR nano
 # git diff with delta should be able to use mouse scroll
 set -x LESS --redraw-on-quit
 
+# k8s config for SMA
+set -x KUBECONFIG ~/.kube/config
+
 # todo ask miguel why I have to write this myself and why nix-your-shell is not doing this
 function develop --wraps='nix develop'
   env ANY_NIX_SHELL_PKGS=(basename (pwd))"#"(git describe --tags --dirty) (type -P nix) develop --command fish
