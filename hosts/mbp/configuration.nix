@@ -83,6 +83,11 @@
       "com.apple.dock" = {
         no-bouncing = true;
       };
+      "NSGlobalDomain" = {
+        "ApplePressAndHoldEnabled" = true;
+        "InitialKeyRepeat" = 15;
+        "KeyRepeat" = 2;
+      };
     };
 
     # normally you would need to logout login so preferences take effect
