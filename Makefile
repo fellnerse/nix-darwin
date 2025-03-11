@@ -18,3 +18,9 @@ trampoline:
 
 user:
 	home-manager switch --flake .#$(USER) -b backup
+
+
+gc:
+	nix-env --delete-generations old
+	nix-store --gc
+	nix-collect-garbage -d

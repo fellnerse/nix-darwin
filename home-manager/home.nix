@@ -49,7 +49,8 @@
       sudo.disabled = false;
       aws.disabled = true;
       gcloud.disabled = true;
-      azure.disabled = false;
+      azure.disabled = true;
+      docker_context.disabled = true;
       nix_shell.disabled = true;
       line_break.disabled = false;
       directory = {
