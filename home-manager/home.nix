@@ -79,7 +79,6 @@
     };
   };
 
-  # this seems to work for loading, but the generated file is in the wrong format...it somehow introduces a new line where it should not
   programs.k9s = {
     enable = true;
     plugin = {
