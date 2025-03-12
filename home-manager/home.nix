@@ -79,6 +79,31 @@
     };
   };
 
+  # this seems to work for loading, but the generated file is in the wrong format...it somehow introduces a new line where it should not
+  programs.k9s = {
+    enable = true;
+    plugin = {
+      plugins = {
+        jqlogs = {
+          shortCut = "Shift-L";
+          confirm = false;
+          description = "Logs (jq)";
+          scopes = [
+            "pod"
+            "containers"
+            "logs"
+          ];
+          command = "bash";
+          background = false;
+          args = [
+            "-c"
+            "kubectl logs -f --tail=20 $NAME -n $NAMESPACE --context $CONTEXT | jq -SR '. | try (fromjson|.text) catch .'"
+          ];
+        };
+      };
+    };
+  };
+
   programs.fzf.enable = true;
   programs.jq.enable = true;
 
