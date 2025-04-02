@@ -15,6 +15,7 @@
     "iterm2"
     "whisky"
     "obsidian"
+    "bruno"
   ];
   masApps = {
     "Bitwarden" = 1352778147;
