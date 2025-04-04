@@ -131,6 +131,16 @@
   programs.fzf.enable = true;
   programs.jq.enable = true;
 
+  programs.wezterm = {
+    enable = true;
+    extraConfig = builtins.readFile ./wezterm.lua;
+  };
+
+  programs.zellij = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
   # add my custom stuff to fish config
   xdg.configFile.iterm-integration = {
     source = ./config.cloud.fish;
