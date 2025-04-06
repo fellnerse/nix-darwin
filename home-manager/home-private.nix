@@ -47,11 +47,34 @@
 
   programs.git = {
     enable = true;
-    delta = {
-      enable = true;
-    };
+    delta.enable = true;
     aliases = {
       s = "status -s";
+    };
+    # configs form here: https://blog.gitbutler.com/how-git-core-devs-configure-git/
+    extraConfig = {
+      column.ui = "auto";
+      branch.sort = "-committerdate";
+      tag.sort = "version:refname";
+      init.defaultBranch = "main";
+      diff.algorithm = "histogram";
+      diff.colorMoved = "plain";
+      diff.mnemonicPrefix = "true";
+      diff.renames = "true";
+      push.default = "simple";
+      push.autoSetupRemote = "true";
+      push.followTags = "true";
+      fetch.prune = "true";
+      fetch.pruneTags = "true";
+      fetch.all = "true"; # why the hell not?
+      help.autocorrect = "prompt";
+      commit.verbose = "true";
+      rerere.enabled = "true";
+      rerere.autoupdate = "true";
+      core.excludesfile = "~/.gitignore";
+      rebase.autoSquash = "true";
+      rebase.autoStash = "true";
+      rebase.updateRefs = "true";
     };
   };
 
@@ -69,6 +92,16 @@
 
   programs.fzf.enable = true;
   programs.jq.enable = true;
+
+  programs.wezterm = {
+    enable = true;
+    extraConfig = builtins.readFile ./wezterm.lua;
+  };
+
+  programs.zellij = {
+    enable = true;
+    enableFishIntegration = true;
+  };
 
   # add my custom stuff to fish config
   xdg.configFile.iterm-integration = {
