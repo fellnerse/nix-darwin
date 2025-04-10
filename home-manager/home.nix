@@ -11,6 +11,7 @@
     packages = [
       # pkgs.teams
       pkgs.nix-your-shell
+      pkgs.sops
     ];
   };
 
