@@ -58,10 +58,11 @@
       less
     ];
     # these shells are configured for nix
+    # I think I do not need this, have a look at the bottom, how I set it up
     shells = [
       pkgs.bashInteractive
       pkgs.zsh
-      pkgs.fish
+      #      pkgs.fish
     ];
   };
 
@@ -106,6 +107,7 @@
   users.users.sefe = {
     name = "sefe";
     home = "/Users/sefe";
+    shell = pkgs.fish;
   };
 
   users.users.private = {
@@ -113,6 +115,7 @@
     home = "/Users/private";
   };
 
+  # https://nixos.wiki/wiki/Command_Shell
   programs = {
     # Create /etc/zshrc that loads the nix-darwin environment.
     zsh.enable = true;
