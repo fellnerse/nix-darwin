@@ -12,6 +12,7 @@
       # pkgs.teams
       pkgs.nix-your-shell
       pkgs.sops
+      pkgs.kubectl
     ];
   };
 
