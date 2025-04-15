@@ -7,9 +7,6 @@ end
 # iterm
 test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
 
-# autojump
-[ -f /opt/homebrew/share/autojump/autojump.fish ]; and source /opt/homebrew/share/autojump/autojump.fish
-
 # thefuck
 thefuck --alias | source
 

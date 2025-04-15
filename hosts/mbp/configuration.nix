@@ -48,13 +48,11 @@
     systemPackages = with pkgs; [
       vim
       mtr-gui
-      asdf-vm # need to also load fish autocompletions in the fish init further down
       # pkgs.openmoji-color # font with openmoji emojis
       nixpkgs-fmt
       home-manager
       yq-go
       nix-search-cli
-      openscad
       less
     ];
     # these shells are configured for nix

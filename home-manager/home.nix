@@ -132,6 +132,11 @@
   programs.fzf.enable = true;
   programs.jq.enable = true;
 
+  programs.autojump = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
   programs.wezterm = {
     enable = true;
     extraConfig = builtins.readFile ./wezterm.lua;

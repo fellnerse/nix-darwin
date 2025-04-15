@@ -76,10 +76,10 @@ config.keys = {
 
 -- add nix profile path to PATH; wezterm is started via finder, which has very minimal PATH
 -- https://github.com/wezterm/wezterm/issues/3950#issuecomment-1667922224
-config.set_environment_variables = {
-    PATH = wezterm.home_dir .. '/.nix-profile/bin:' .. os.getenv('PATH')
-}
-config.default_prog = { 'zellij', '-l', 'welcome' }
+-- config.set_environment_variables = {
+--     PATH = wezterm.home_dir .. '/.nix-profile/bin:' .. os.getenv('PATH')
+-- }
+-- config.default_prog = { 'zellij', '-l', 'welcome' }
 
 -- and finally, return the configuration to wezterm
 return config
