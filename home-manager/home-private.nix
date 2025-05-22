@@ -105,7 +105,7 @@
 
   programs.zellij = {
     enable = true;
-    enableFishIntegration = true;
+#    enableFishIntegration = true;
   };
 
   # add my custom stuff to fish config

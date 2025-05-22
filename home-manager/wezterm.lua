@@ -81,5 +81,10 @@ config.keys = {
 -- }
 -- config.default_prog = { 'zellij', '-l', 'welcome' }
 
+-- load wuake style module
+require("wuake").setup {
+  config = config,
+}
+
 -- and finally, return the configuration to wezterm
 return config
