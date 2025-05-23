@@ -142,27 +142,11 @@
     extraConfig = builtins.readFile ./wezterm.lua;
   };
 
-  #  programs.zellij = {
-  #    enable = true;
-  #    #    enableFishIntegration = true;
-  #  };
-
   programs.lazygit.enable = true;
 
   # add my custom stuff to fish config
   xdg.configFile.iterm-integration = {
     source = ./config.cloud.fish;
     target = "fish/conf.d/config.fish";
-  };
-
-  # programs to run on startup
-  launchd.agents = {
-    iterm2 = {
-      enable = true;
-      config = {
-        Program = "/Applications/iTerm.app/Contents/MacOS/iTerm2";
-        RunAtLoad = true;
-      };
-    };
   };
 }
