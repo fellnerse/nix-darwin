@@ -56,11 +56,12 @@
       less
     ];
     # these shells are configured for nix
-    # I think I do not need this, have a look at the bottom, how I set it up
+    # this edits the shells listed in /etc/shells
+    # if you want to chch -s a shell it has to be in there
     shells = [
       pkgs.bashInteractive
       pkgs.zsh
-      #      pkgs.fish
+      pkgs.fish
     ];
   };
 

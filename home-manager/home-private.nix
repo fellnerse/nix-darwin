@@ -105,8 +105,10 @@
 
   programs.zellij = {
     enable = true;
-#    enableFishIntegration = true;
+    #    enableFishIntegration = true;
   };
+
+  programs.lazygit.enable = true;
 
   # add my custom stuff to fish config
   xdg.configFile.iterm-integration = {

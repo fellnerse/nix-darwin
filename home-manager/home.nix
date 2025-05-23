@@ -142,10 +142,12 @@
     extraConfig = builtins.readFile ./wezterm.lua;
   };
 
-  programs.zellij = {
-    enable = true;
-    #    enableFishIntegration = true;
-  };
+  #  programs.zellij = {
+  #    enable = true;
+  #    #    enableFishIntegration = true;
+  #  };
+
+  programs.lazygit.enable = true;
 
   # add my custom stuff to fish config
   xdg.configFile.iterm-integration = {
