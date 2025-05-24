@@ -3,11 +3,12 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin";
-    nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-24.11";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     # how to use stable and unstable at the same time
     # https://nixos.wiki/wiki/Flakes#Importing_packages_from_multiple_channels
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     lix-module.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.1-1.tar.gz";
     lix-module.inputs.nixpkgs.follows = "nixpkgs";
@@ -16,9 +17,6 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     mac-app-util.url = "github:hraban/mac-app-util";
-
-    pre-commit-hooks.url = "github:cachix/git-hooks.nix";
-    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -87,42 +85,20 @@
 
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
 
-      # default stuff installed in devshells
       devShells = forAllSystems (
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          pre-commit = self.checks.${system}.pre-commit-check;
         in
         {
-          default = pkgs.mkShellNoCC {
-            # can add default packages here
-            packages = [ ] ++ pre-commit.enabledPackages;
-            inherit (pre-commit) shellHook;
+          default = pkgs.mkShell {
+            packages = [
+              pkgs.git
+              pkgs.direnv
+            ]; # Example packages
+            shellHook = "echo 'Welcome to your development shell!'";
           };
         }
       );
-
-      # pre-commit hooks for this repo
-      checks = forAllSystems (system: {
-        pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
-          src = ./.;
-          hooks = {
-            nixfmt-rfc-style.enable = true;
-            flake-checker = {
-              enable = true;
-              package = inputs.nixpkgs-unstable.legacyPackages.${system}.flake-checker;
-              entry = "flake-checker -f --no-telemetry --check-supported false";
-            };
-            flake-lock = {
-              enable = true;
-              name = "Check flake.lock";
-              entry = "nix flake lock";
-              files = "(^flake\\.lock$)";
-            };
-          };
-        };
-      });
-
     };
 }

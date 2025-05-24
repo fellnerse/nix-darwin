@@ -5,7 +5,6 @@
     homeDirectory = "/Users/private";
     stateVersion = "24.05";
     packages = [
-      # pkgs.teams
       pkgs.nix-your-shell
     ];
   };
@@ -106,6 +105,22 @@
   programs.zellij = {
     enable = true;
     #    enableFishIntegration = true;
+  };
+
+  #  #currently broken
+  #  programs.ghostty = {
+  #    enable = true;
+  #    enableFishIntegration = true;
+  #    settings = {
+  #        keybind = global:cmd+grave_accent=toggle_quick_terminal;
+  #    };
+  #  };
+
+  xdg.configFile.ghostty = {
+    source = pkgs.writeText "ghostty-config" ''
+      keybind = global:cmd+grave_accent=toggle_quick_terminal
+    '';
+    target = "ghostty/config";
   };
 
   programs.lazygit.enable = true;
