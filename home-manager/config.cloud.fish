@@ -19,6 +19,7 @@ abbr -a jwt_iat_exp "jwt -p | jq -s 'select(. != null) | .[1] | {issued_at: (.ia
 abbr -a ls eza
 abbr -a baobab "GSETTINGS_SCHEMA_DIR=/opt/homebrew/share/glib-2.0/schemas/ baobab"
 abbr -a gss "git status -s"
+abbr -a lz lazygit
 
 # jetbrains toolbox
 export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"

@@ -6,9 +6,8 @@
   ...
 }:
 {
-  services.nix-daemon.enable = true;
-
   nix = {
+    enable = true;
     gc = {
       automatic = true;
       interval = {
@@ -36,6 +35,10 @@
     optimise.automatic = true;
     registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
   };
+  # The default Nix build user group ID was changed from 30000 to 350.
+      #You are currently managing Nix build users with nix-darwin, but your
+      #nixbld group has GID 30000, whereas we expected 350.
+  ids.gids.nixbld = 30000;
 
   nixpkgs = {
     config.allowUnfree = true;
@@ -66,12 +69,12 @@
   };
 
   fonts.packages = with pkgs; [
-    recursive
-    (nerdfonts.override { fonts = [ "Monaspace" ]; })
+    nerd-fonts.monaspace
   ];
 
   # check `darwin-rebuild changelog`
   system = {
+    primaryUser = "sefe";
     stateVersion = 5;
     configurationRevision = self.rev or self.dirtyRev or null;
 
@@ -91,14 +94,15 @@
     };
 
     # normally you would need to logout login so preferences take effect
-    activationScripts.postUserActivation.text = ''
+    # this was previously under .postUserActivation; not sure if it still works like this
+    activationScripts.text = ''
       # Following line should allow us to avoid a logout/login cycle
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
     '';
   };
 
   # Add ability to used TouchID for sudo authentication
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   # homebrew should be used for GUI applications
   homebrew = import ./homebrew.nix;

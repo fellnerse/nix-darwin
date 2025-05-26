@@ -143,6 +143,7 @@
   };
 
   programs.lazygit.enable = true;
+  programs.uv.enable = true;
 
   # add my custom stuff to fish config
   xdg.configFile.iterm-integration = {
