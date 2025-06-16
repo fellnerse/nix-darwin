@@ -1,8 +1,8 @@
 update:
 	nix flake update
 
-rebuild:
-	darwin-rebuild switch --flake .#Sebastians-MacBook-Pro-2
+system:
+	sudo darwin-rebuild switch --flake .#Sebastians-MacBook-Pro-2
 
 check:
 	darwin-rebuild check --flake .#Sebastians-MacBook-Pro-2

@@ -36,8 +36,8 @@
     registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
   };
   # The default Nix build user group ID was changed from 30000 to 350.
-      #You are currently managing Nix build users with nix-darwin, but your
-      #nixbld group has GID 30000, whereas we expected 350.
+  #You are currently managing Nix build users with nix-darwin, but your
+  #nixbld group has GID 30000, whereas we expected 350.
   ids.gids.nixbld = 30000;
 
   nixpkgs = {
