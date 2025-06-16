@@ -15,69 +15,96 @@
     mac-app-util.url = "github:hraban/mac-app-util";
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, ... }: let
-    systems = [ "aarch64-darwin" ];
-    forAllSystems = nixpkgs.lib.genAttrs systems;
+  outputs =
+    inputs@{
+      self,
+      nix-darwin,
+      nixpkgs,
+      lix-module,
+      nixpkgs-unstable,
+      home-manager,
+      mac-app-util,
+      ...
+    }:
+    let
+      systems = [ "aarch64-darwin" ];
+      forAllSystems = nixpkgs.lib.genAttrs systems;
 
-    mkPkgs = system: import nixpkgs {
-      inherit system;
-      config.allowUnfree = true;
-      overlays = [
-        self.overlays.unstable-packages
-        self.overlays.current-lix
-      ];
-    };
-
-    pkgsFor = forAllSystems mkPkgs;
-  in {
-    overlays = {
-      unstable-packages = final: prev: {
-        unstable = import inputs.nixpkgs-unstable {
-          system = final.system;
+      # Create consistent pkgs for each system with overlays and unfree packages
+      mkPkgs =
+        system:
+        import nixpkgs {
+          inherit system;
           config.allowUnfree = true;
+          overlays = [
+            self.overlays.unstable-packages
+            self.overlays.current-lix
+          ];
+        };
+
+      pkgsFor = forAllSystems mkPkgs;
+    in
+    {
+      # Build darwin flake using:
+      # $ darwin-rebuild build --flake .#Sebastians-MacBook-Pro-2
+      darwinConfigurations."Sebastians-MacBook-Pro-2" = nix-darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        # needed so we can pass self down to the other modules
+        specialArgs = { inherit self inputs; };
+        modules = [
+          ./hosts/mbp/configuration.nix
+          lix-module.nixosModules.lixFromNixpkgs
+          self.nixosModules.current-lix
+        ];
+      };
+
+      # Standalone home-manager configuration entrypoint
+      # Available through 'home-manager switch --flake .#sefe -b backup'
+      homeConfigurations = {
+        sefe = home-manager.lib.homeManagerConfiguration {
+          # Using consistent pkgs with overlays and unfree packages enabled
+          pkgs = pkgsFor.aarch64-darwin;
+          extraSpecialArgs = { inherit self inputs; };
+          modules = [ ./home-manager/home.nix ];
+        };
+
+        "private" = home-manager.lib.homeManagerConfiguration {
+          pkgs = pkgsFor.aarch64-darwin;
+          extraSpecialArgs = { inherit self inputs; };
+          modules = [ ./home-manager/home-private.nix ];
         };
       };
 
-      current-lix = final: prev: {
-        lix = inputs.nixpkgs-unstable.legacyPackages.${final.system}.lix;
-      };
-    };
+      overlays = {
+        # Makes unstable packages available as pkgs.unstable.package-name
+        unstable-packages = final: prev: {
+          unstable = import inputs.nixpkgs-unstable {
+            system = final.system;
+            config.allowUnfree = true;
+          };
+        };
 
-    darwinConfigurations."Sebastians-MacBook-Pro-2" = nix-darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-      specialArgs = { inherit self inputs; };
-      modules = [
-        ./hosts/mbp/configuration.nix
-        inputs.lix-module.nixosModules.lixFromNixpkgs
-        self.nixosModules.current-lix
-      ];
-    };
-
-    homeConfigurations = {
-      sefe = inputs.home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor.aarch64-darwin;
-        extraSpecialArgs = { inherit self inputs; };
-        modules = [ ./home-manager/home.nix ];
+        # Replaces lix with the unstable version
+        current-lix = final: prev: {
+          lix = inputs.nixpkgs-unstable.legacyPackages.${final.system}.lix;
+        };
       };
 
-      private = inputs.home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor.aarch64-darwin;
-        extraSpecialArgs = { inherit self inputs; };
-        modules = [ ./home-manager/home-private.nix ];
+      nixosModules.current-lix = {
+        nixpkgs.overlays = [ self.overlays.current-lix ];
       };
+
+      # Use consistent pkgs instead of legacyPackages for formatter
+      formatter = forAllSystems (system: pkgsFor.${system}.nixfmt-tree);
+
+      devShells = forAllSystems (system: {
+        default = pkgsFor.${system}.mkShell {
+          packages = with pkgsFor.${system}; [
+            git
+            direnv
+          ]; # Example packages
+          shellHook = "echo 'Welcome to your development shell!'";
+        };
+      });
     };
-
-    nixosModules.current-lix = {
-      nixpkgs.overlays = [ self.overlays.current-lix ];
-    };
-
-    formatter = forAllSystems (system: pkgsFor.${system}.nixfmt-rfc-style);
-
-    devShells = forAllSystems (system: {
-      default = pkgsFor.${system}.mkShell {
-        packages = with pkgsFor.${system}; [ git direnv ];
-        shellHook = "echo 'Welcome to your development shell!'";
-      };
-    });
-  };
 }
