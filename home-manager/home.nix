@@ -13,7 +13,7 @@
       pkgs.nix-your-shell
       pkgs.sops
       pkgs.kubectl
-      pkgs.claude-code
+      pkgs.unstable.claude-code
     ];
   };
 

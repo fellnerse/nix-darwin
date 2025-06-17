@@ -1,6 +1,9 @@
 update:
 	nix flake update
 
+update-unstable:
+	nix flake update nixpkgs-unstable
+
 system:
 	sudo darwin-rebuild switch --flake .#Sebastians-MacBook-Pro-2
 
@@ -9,9 +12,6 @@ check:
 
 build:
 	darwin-rebuild build --flake .#Sebastians-MacBook-Pro-2
-
-#switch:
-#	nix run nix-darwin -- switch --flake ~/.config/nix-darwin
 
 trampoline:
 	nix run github:hraban/mac-app-util -- mktrampoline "/nix/store/pfm28jpyp52a60ygc57bwn7x1wx7isq4-iterm2-3.5.2/Applications/iTerm2.app" /Applications/MyApp.app
