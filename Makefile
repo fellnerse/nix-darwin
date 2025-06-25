@@ -4,6 +4,9 @@ update:
 update-unstable:
 	nix flake update nixpkgs-unstable
 
+update-home-manager:
+	nix flake update home-manager
+
 system:
 	sudo darwin-rebuild switch --flake .#Sebastians-MacBook-Pro-2
 
