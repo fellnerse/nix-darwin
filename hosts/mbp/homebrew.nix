@@ -17,6 +17,7 @@
     "obsidian"
     "bruno"
     "ghostty"
+    "wave"
   ];
   masApps = {
     "Bitwarden" = 1352778147;
