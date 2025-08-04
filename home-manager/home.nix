@@ -14,6 +14,7 @@
       pkgs.sops
       pkgs.kubectl
       pkgs.unstable.claude-code
+      pkgs.shell-gpt
     ];
   };
 
