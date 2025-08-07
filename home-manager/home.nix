@@ -146,6 +146,9 @@
 
   programs.lazygit.enable = true;
   programs.uv.enable = true;
+  programs.neovim.enable = true;
+  programs.fd.enable = true;
+  programs.ripgrep.enable = true;
 
   # add my custom stuff to fish config
   xdg.configFile.iterm-integration = {
