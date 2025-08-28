@@ -109,22 +109,57 @@
 
   programs.k9s = {
     enable = true;
+    # was not able to get it to work with command kubectl, that does not support pipes
+    # the plugins location can be found with k9s info
+    # logs about plugin failure can be found in the logs (also in k9s info)
     plugin = {
       plugins = {
         jqlogs = {
-          shortCut = "Shift-L";
+          shortCut = "Ctrl-L";
           confirm = false;
           description = "Logs (jq)";
           scopes = [
             "pod"
-            "containers"
-            "logs"
           ];
           command = "bash";
           background = false;
           args = [
             "-c"
-            "kubectl logs -f --tail=20 $NAME -n $NAMESPACE --context $CONTEXT | jq -SR '. | try (fromjson|.text) catch .'"
+            ''
+              kubectl logs -f --tail=20 "$NAME" -n "$NAMESPACE" --context "$CONTEXT" \
+                          | jq -SR '. | try (fromjson| (.record.time.repr) +" " + (.record.level.name) +" ["+ (.record.extra.plant_id) +"|" +(.record.extra.correlation_id) +"] "+ (.record.message ) )' ''
+          ];
+        };
+        # deployment view plugin
+        jqlogsd = {
+          shortCut = "Ctrl-L";
+          confirm = false;
+          description = "Logs (jq)";
+          scopes = [ "deployment" ];
+          command = "bash";
+          background = false;
+          args = [
+            "-c"
+            ''
+              kubectl logs -f --tail=20 "deployment/$NAME" -n "$NAMESPACE" --context "$CONTEXT" \
+                | jq -SR '. | try (fromjson | (.record.time.repr) +" " + (.record.level.name) + " [" + (.record.extra.plant_id) + "|" + (.record.extra.correlation_id) + "] " + (.record.message)) catch .'
+            ''
+          ];
+        };
+        # service view plugin
+        jqlogss = {
+          shortCut = "Ctrl-L";
+          confirm = false;
+          description = "Logs (jq)";
+          scopes = [ "service" ];
+          command = "bash";
+          background = false;
+          args = [
+            "-c"
+            ''
+              kubectl logs -f --tail=20 "service/$NAME" -n "$NAMESPACE" --context "$CONTEXT" \
+                | jq -SR '. | try (fromjson | (.record.time.repr) +" " + (.record.level.name) + " [" + (.record.extra.plant_id) + "|" + (.record.extra.correlation_id) + "] " + (.record.message)) catch .'
+            ''
           ];
         };
       };
