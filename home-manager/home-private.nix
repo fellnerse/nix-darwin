@@ -6,6 +6,9 @@
     stateVersion = "24.05";
     packages = [
       pkgs.nix-your-shell
+      pkgs.mise
+      pkgs.shell-gpt
+      pkgs.unstable.claude-code
     ];
   };
 
@@ -89,6 +92,14 @@
     };
   };
 
+  programs.lazygit.enable = true;
+  programs.neovim = {
+  enable = true;
+  extraPackages = with pkgs; [ lua-language-server stylua ripgrep ];
+  plugins = with pkgs.vimPlugins; [ lazy-nvim ];
+  extraLuaConfig = ''require("lazy").setup({ spec = { { "LazyVim/LazyVim", import = "lazyvim.plugins" } }, })'';
+};
+
   programs.fzf.enable = true;
   programs.jq.enable = true;
 
@@ -123,7 +134,6 @@
     target = "ghostty/config";
   };
 
-  programs.lazygit.enable = true;
 
   # add my custom stuff to fish config
   xdg.configFile.iterm-integration = {
