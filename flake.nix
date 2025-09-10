@@ -8,8 +8,6 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    lix-module.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.3-2.tar.gz";
-    lix-module.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     mac-app-util.url = "github:hraban/mac-app-util";
@@ -20,7 +18,6 @@
       self,
       nix-darwin,
       nixpkgs,
-      lix-module,
       nixpkgs-unstable,
       home-manager,
       mac-app-util,
@@ -52,7 +49,6 @@
         specialArgs = { inherit self inputs; };
         modules = [
           ./hosts/mbp/configuration.nix
-          lix-module.nixosModules.lixFromNixpkgs
         ];
       };
 

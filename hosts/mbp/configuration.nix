@@ -8,6 +8,7 @@
 {
   nix = {
     enable = true;
+    package = pkgs.lixPackageSets.stable.lix;
     gc = {
       automatic = true;
       interval = {
