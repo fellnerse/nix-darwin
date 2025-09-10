@@ -22,6 +22,8 @@ trampoline:
 user:
 	home-manager switch --flake .#$(USER) -b backup
 
+hydra-check:
+	nix-shell -p hydra-check --run "hydra-check uv --arch aarch64-darwin --channel nixpkgs-unstable"
 
 gc:
 	nix-env --delete-generations old
