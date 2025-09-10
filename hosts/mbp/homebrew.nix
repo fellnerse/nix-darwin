@@ -12,12 +12,11 @@
     "signal"
     "arc"
     "bambu-studio"
-    "iterm2"
-    "whisky"
     "obsidian"
     "bruno"
     "ghostty"
     "wave"
+    "crossover"
   ];
   masApps = {
     "Bitwarden" = 1352778147;
