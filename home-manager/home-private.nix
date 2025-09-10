@@ -17,6 +17,12 @@
     direnv.disabled = false;
   };
 
+  # Private-specific git config
+  programs.git = {
+    userName = "fellnerse 💯";
+    userEmail = "hey@sebastianfellner.de";
+  };
+
   programs.neovim = {
     enable = true;
     extraPackages = with pkgs; [

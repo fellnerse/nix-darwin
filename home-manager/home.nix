@@ -31,6 +31,19 @@
     };
   };
 
+  # Sefe-specific git config
+  programs.git = {
+    userName = "sefe 💯";
+    userEmail = "sefe@netlight.com"; # Replace with actual email
+  };
+  # overwrite in client projects like this:
+  # shellHook = ''
+  #  # Project-specific git config (overrides home-manager defaults)
+  #  git config user.name "Client Developer"
+  #  git config user.email "dev@client.com"
+  #  ...
+  #  ''
+
   programs.k9s = {
     enable = true;
     # was not able to get it to work with command kubectl, that does not support pipes
