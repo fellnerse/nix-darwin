@@ -26,10 +26,12 @@
       substituters = [
         "https://nix-community.cachix.org"
         "https://tweag-nickel.cachix.org"
+        "https://cache.garnix.io" # i'm pushing packages that i need to build there
       ];
       trusted-public-keys = [
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "tweag-nickel.cachix.org-1:GIthuiK4LRgnW64ALYEoioVUQBWs0jexyoYVeLDBwRA="
+        "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       ];
     };
     optimise.automatic = true;

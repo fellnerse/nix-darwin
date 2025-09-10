@@ -8,7 +8,7 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    lix-module.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.1-1.tar.gz";
+    lix-module.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.3-2.tar.gz";
     lix-module.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -38,7 +38,6 @@
           config.allowUnfree = true;
           overlays = [
             self.overlays.unstable-packages
-            self.overlays.current-lix
           ];
         };
 
@@ -54,7 +53,6 @@
         modules = [
           ./hosts/mbp/configuration.nix
           lix-module.nixosModules.lixFromNixpkgs
-          self.nixosModules.current-lix
         ];
       };
 
@@ -83,15 +81,6 @@
             config.allowUnfree = true;
           };
         };
-
-        # Replaces lix with the unstable version
-        current-lix = final: prev: {
-          lix = inputs.nixpkgs-unstable.legacyPackages.${final.system}.lix;
-        };
-      };
-
-      nixosModules.current-lix = {
-        nixpkgs.overlays = [ self.overlays.current-lix ];
       };
 
       # Use consistent pkgs instead of legacyPackages for formatter
