@@ -1,5 +1,13 @@
 { pkgs, ... }:
 {
+  # Common packages
+  home.packages = with pkgs; [
+    nix-your-shell
+    shell-gpt
+    claude-code
+    unstable.uv
+  ];
+
   programs.home-manager.enable = true;
 
   programs.direnv = {
@@ -28,6 +36,7 @@
   programs.starship = {
     enable = true;
     settings = {
+      direnv.disabled = false;
       git_commit.only_detached = false;
       time.disabled = false;
       status.disabled = false;
@@ -95,12 +104,16 @@
 
   programs.lazygit.enable = true;
 
-  # Common packages
-  home.packages = with pkgs; [
-    nix-your-shell
-    shell-gpt
-    claude-code
-  ];
+  programs.neovim = {
+    enable = true;
+    extraPackages = with pkgs; [
+      lua-language-server
+      stylua
+      ripgrep
+    ];
+    plugins = with pkgs.vimPlugins; [ lazy-nvim ];
+    extraLuaConfig = ''require("lazy").setup({ spec = { { "LazyVim/LazyVim", import = "lazyvim.plugins" } }, })'';
+  };
 
   # add my custom stuff to fish config
   xdg.configFile.iterm-integration = {

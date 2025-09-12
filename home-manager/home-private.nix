@@ -8,30 +8,13 @@
     stateVersion = "24.05";
     packages = with pkgs; [
       mise
-      unstable.uv
     ];
-  };
-
-  # Private-specific starship settings
-  programs.starship.settings = {
-    direnv.disabled = false;
   };
 
   # Private-specific git config
   programs.git = {
     userName = "fellnerse 💯";
     userEmail = "hey@sebastianfellner.de";
-  };
-
-  programs.neovim = {
-    enable = true;
-    extraPackages = with pkgs; [
-      lua-language-server
-      stylua
-      ripgrep
-    ];
-    plugins = with pkgs.vimPlugins; [ lazy-nvim ];
-    extraLuaConfig = ''require("lazy").setup({ spec = { { "LazyVim/LazyVim", import = "lazyvim.plugins" } }, })'';
   };
 
   programs.zellij = {
