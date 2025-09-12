@@ -89,6 +89,7 @@
       };
       "com.apple.dock" = {
         no-bouncing = true;
+        mru-spaces = false; # do not re-arrange spaces based on usage
       };
       "NSGlobalDomain" = {
         "ApplePressAndHoldEnabled" = true;
