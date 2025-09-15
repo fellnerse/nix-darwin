@@ -29,6 +29,9 @@
     directory = {
       truncate_to_repo = true;
     };
+    kubernetes = {
+      disabled = false;
+    };
   };
 
   # Sefe-specific git config
