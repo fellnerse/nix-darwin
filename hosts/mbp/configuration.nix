@@ -90,6 +90,12 @@
       "com.apple.dock" = {
         no-bouncing = true;
         mru-spaces = false; # do not re-arrange spaces based on usage
+
+        # Disable Hot Corners
+        wvous-tl-corner = 0; # Top-left
+        wvous-tr-corner = 0; # Top-right
+        wvous-bl-corner = 0; # Bottom-left
+        wvous-br-corner = 0; # Bottom-right
       };
       "NSGlobalDomain" = {
         "ApplePressAndHoldEnabled" = true;

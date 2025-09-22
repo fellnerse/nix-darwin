@@ -88,6 +88,7 @@
           packages = with pkgsFor.${system}; [
             git
             direnv
+            pre-commit
           ]; # Example packages
           shellHook = "echo 'Welcome to your development shell!'";
         };
