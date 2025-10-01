@@ -44,8 +44,11 @@
     };
   };
 
+  programs.ssh.enable = true;
+
   programs.git = {
     enable = true;
+    package = pkgs.gitFull;
     delta.enable = true;
     aliases = {
       s = "status -s";
