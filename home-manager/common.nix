@@ -4,7 +4,7 @@
   home.packages = with pkgs; [
     nix-your-shell
     shell-gpt
-    claude-code
+    unstable.claude-code
     unstable.uv
   ];
 
