@@ -44,7 +44,10 @@
     };
   };
 
-  programs.ssh.enable = true;
+  programs.ssh = {
+    enable = true;
+    package = pkgs.openssh;
+  };
 
   programs.git = {
     enable = true;
