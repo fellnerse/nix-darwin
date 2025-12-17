@@ -51,17 +51,20 @@
   programs.ssh = {
     enable = true;
     package = pkgs.openssh;
+    enableDefaultConfig = false;
+  };
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
   };
 
   programs.git = {
     enable = true;
     package = pkgs.gitFull;
-    delta.enable = true;
-    aliases = {
-      s = "status -s";
-    };
-    # configs form here: https://blog.gitbutler.com/how-git-core-devs-configure-git/
-    extraConfig = {
+    # configs from here: https://blog.gitbutler.com/how-git-core-devs-configure-git/
+    settings = {
+      alias.s = "status -s";
       column.ui = "auto";
       branch.sort = "-committerdate";
       tag.sort = "version:refname";
@@ -123,6 +126,15 @@
     ];
     plugins = with pkgs.vimPlugins; [ lazy-nvim ];
     extraLuaConfig = ''require("lazy").setup({ spec = { { "LazyVim/LazyVim", import = "lazyvim.plugins" } }, })'';
+  };
+
+  programs.zed-editor = {
+    enable = true;
+    package = pkgs.zed-editor;
+  };
+
+  programs.firefox = {
+    enable = true;
   };
 
   # add my custom stuff to fish config

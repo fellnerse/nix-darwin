@@ -35,9 +35,9 @@
   };
 
   # Sefe-specific git config
-  programs.git = {
-    userName = "sefe 💯";
-    userEmail = "sefe@netlight.com"; # Replace with actual email
+  programs.git.settings.user = {
+    name = "sefe 💯";
+    email = "sefe@netlight.com"; # Replace with actual email
   };
   # overwrite in client projects like this:
   # shellHook = ''
