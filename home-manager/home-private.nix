@@ -1,6 +1,9 @@
 { pkgs, inputs, ... }:
 {
-  imports = [ ./common.nix ];
+  imports = [
+    ./common.nix
+    inputs.mac-app-util.homeManagerModules.default
+  ];
 
   home = {
     username = "private";
@@ -12,9 +15,9 @@
   };
 
   # Private-specific git config
-  programs.git = {
-    userName = "fellnerse 💯";
-    userEmail = "hey@sebastianfellner.de";
+  programs.git.settings.user = {
+    name = "fellnerse 💯";
+    email = "hey@sebastianfellner.de";
   };
 
   programs.zellij = {

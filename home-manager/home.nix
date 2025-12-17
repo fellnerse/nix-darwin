@@ -4,7 +4,10 @@
   ...
 }:
 {
-  imports = [ ./common.nix ];
+  imports = [
+    ./common.nix
+    inputs.mac-app-util.homeManagerModules.default
+  ];
 
   home = {
     username = "sefe";
