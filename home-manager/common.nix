@@ -131,6 +131,38 @@
   programs.zed-editor = {
     enable = true;
     package = pkgs.zed-editor;
+
+    userSettings = {
+      use_system_window_tabs = true;
+      telemetry = {
+        diagnostics = false;
+        metrics = false;
+      };
+      base_keymap = "JetBrains";
+      ui_font_size = 16;
+      buffer_font_size = 15;
+      theme = {
+        mode = "system";
+        light = "Gruvbox Light";
+        dark = "Gruvbox Dark";
+      };
+    };
+
+    userKeymaps = [
+      {
+        context = "Workspace";
+        bindings = { };
+      }
+      {
+        context = "Editor && vim_mode == insert";
+        bindings = { };
+      }
+      {
+        bindings = {
+          "cmd-m" = "workspace::ToggleZoom";
+        };
+      }
+    ];
   };
 
   programs.firefox = {
