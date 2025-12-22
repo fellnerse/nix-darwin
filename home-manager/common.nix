@@ -6,6 +6,8 @@
     shell-gpt
     unstable.claude-code
     unstable.uv
+    nixd # nix language server used by zeditor
+    nixfmt-rfc-style # nix formatter used by zeditor
   ];
 
   programs.home-manager.enable = true;
@@ -131,6 +133,10 @@
   programs.zed-editor = {
     enable = true;
     package = pkgs.zed-editor;
+    extensions = [
+      "nix"
+      "fish"
+    ];
 
     userSettings = {
       use_system_window_tabs = true;
@@ -145,6 +151,23 @@
         mode = "system";
         light = "Gruvbox Light";
         dark = "Gruvbox Dark";
+      };
+      terminal = {
+        font_family = "MonaspiceNe Nerd Font Mono";
+        shell = "system";
+        working_directory = "current_project_directory";
+      };
+      # Tell Zed to use direnv and direnv can use a flake.nix environment
+      load_direnv = "shell_hook";
+
+      # Use nixd instead of nil for Nix language server
+      languages = {
+        Nix = {
+          language_servers = [
+            "nixd"
+            "!nil"
+          ];
+        };
       };
     };
 
