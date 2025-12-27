@@ -15,7 +15,7 @@
         Hour = 0;
         Minute = 0;
       };
-      options = "--delete-old";
+      options = "--delete-older-than 7d";
     };
     settings = {
       experimental-features = [
