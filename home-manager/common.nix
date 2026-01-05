@@ -157,6 +157,13 @@
       {
         bindings = {
           "cmd-m" = "workspace::ToggleZoom";
+          "cmd-shift-w" = "workspace::CloseInactiveTabsAndPanes";
+          "alt-cmd-o" = [
+            "projects::OpenRecent"
+            {
+              "create_new_window" = true;
+            }
+          ];
         };
       }
     ];
