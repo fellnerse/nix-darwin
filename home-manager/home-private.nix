@@ -20,11 +20,6 @@
     email = "hey@sebastianfellner.de";
   };
 
-  programs.zellij = {
-    enable = true;
-    #    enableFishIntegration = true;
-  };
-
   #  #currently broken
   #  programs.ghostty = {
   #    enable = true;

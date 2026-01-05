@@ -1,5 +1,6 @@
 { pkgs, ... }:
 {
+  imports = [ ./fish.nix ];
   # Common packages
   home.packages = with pkgs; [
     nix-your-shell
@@ -15,28 +16,6 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
-  };
-
-  programs.fish = {
-    enable = true;
-    interactiveShellInit = ''
-      nix-your-shell fish | source
-    '';
-    plugins = [
-      {
-        name = "fish-completion-sync";
-        src = pkgs.fetchFromGitHub {
-          owner = "pfgray";
-          repo = "fish-completion-sync";
-          rev = "f75ed04e98b3b39af1d3ce6256ca5232305565d8";
-          sha256 = "0q3i0vgrfqzbihmnxghbfa11f3449zj6rkys4vpncdmzb18lqsy2";
-        };
-      }
-      {
-        name = "plugin-git";
-        src = pkgs.fishPlugins.plugin-git.src;
-      }
-    ];
   };
 
   programs.starship = {
@@ -110,11 +89,6 @@
   programs.autojump = {
     enable = true;
     enableFishIntegration = true;
-  };
-
-  programs.wezterm = {
-    enable = true;
-    extraConfig = builtins.readFile ./wezterm.lua;
   };
 
   programs.lazygit.enable = true;
@@ -192,9 +166,11 @@
     enable = true;
   };
 
-  # add my custom stuff to fish config
-  xdg.configFile.iterm-integration = {
-    source = ./config.cloud.fish;
-    target = "fish/conf.d/config.fish";
+  programs.zellij = {
+    enable = true;
+    settings = {
+      web_server = true;
+    };
   };
+
 }
