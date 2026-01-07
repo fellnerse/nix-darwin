@@ -110,9 +110,15 @@
     extensions = [
       "nix"
       "fish"
+      "toml"
     ];
 
     userSettings = {
+      autosave = {
+        "after_delay" = {
+          "milliseconds" = 500;
+        };
+      };
       use_system_window_tabs = true;
       telemetry = {
         diagnostics = false;
@@ -158,12 +164,14 @@
         bindings = {
           "cmd-m" = "workspace::ToggleZoom";
           "cmd-shift-w" = "workspace::CloseInactiveTabsAndPanes";
+          "cmd-shift-t" = "terminal_panel::Toggle";
           "alt-cmd-o" = [
             "projects::OpenRecent"
             {
               "create_new_window" = true;
             }
           ];
+          "cmd-?" = "agent::ToggleFocus";
         };
       }
     ];
