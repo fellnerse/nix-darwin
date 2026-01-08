@@ -172,7 +172,21 @@
             }
           ];
           "cmd-?" = "agent::ToggleFocus";
+          "cmd-alt-c" = [
+            "task::Spawn"
+            { "task_name" = "Copy Azure DevOps Permalink"; }
+          ];
         };
+      }
+    ];
+
+    # Custom Tasks
+    userTasks = [
+      {
+        label = "Copy Azure DevOps Permalink";
+        # We use a single line command to ensure Zed/JSON parsing doesn't break
+        command = "begin; set -l RAW_URL (git remote get-url origin); if string match -q 'git@ssh.dev.azure.com:v3/*' $RAW_URL; set -l STRIPPED (string replace 'git@ssh.dev.azure.com:v3/' '' $RAW_URL); set -l PARTS (string split '/' $STRIPPED); set -l ORG $PARTS[1]; set -l PROJ $PARTS[2]; set -l REPO (string replace -r '\\.git$' '' $PARTS[3]); set BASE_URL \"https://dev.azure.com/$ORG/$PROJ/_git/$REPO\"; else; set BASE_URL (string replace -r '\\.git$' '' $RAW_URL); end; set -l COMMIT (git rev-parse HEAD); set -l NEXT_ROW (math \"$ZED_ROW + 1\"); echo \"$BASE_URL?path=/$ZED_RELATIVE_FILE&version=GC$COMMIT&line=$ZED_ROW&lineEnd=$NEXT_ROW&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents\" | pbcopy; osascript -e 'display notification \"Permalink copied to clipboard\" with title \"Zed\"'; end";
+        hide = "on_success";
       }
     ];
   };
