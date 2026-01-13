@@ -111,6 +111,7 @@
       "nix"
       "fish"
       "toml"
+      "opencode"
     ];
 
     userSettings = {
@@ -146,6 +147,12 @@
           language_servers = [
             "nixd"
             "!nil"
+          ];
+        };
+        Python = {
+          language_servers = [
+            "ty"
+            "!basedpyright"
           ];
         };
       };
@@ -202,4 +209,44 @@
     };
   };
 
+  programs.opencode = {
+    enable = true;
+    package = pkgs.unstable.opencode;
+    settings = {
+      share = "disabled";
+      provider = {
+        nlcodepilot = {
+          name = "NL Codepilot";
+          npm = "@ai-sdk/openai-compatible";
+          options = {
+            baseURL = "https://llm-proxy.edgez.live";
+          };
+          models = {
+            claude-latest = {
+              name = "Claude Latest";
+              limit = {
+                context = 200000;
+                output = 64000;
+              };
+              cost = {
+                input = 1.1;
+                output = 5.5;
+              };
+            };
+            claude-opus-4-5-20251101 = {
+              name = "Claude Opus 4.5";
+              limit = {
+                context = 200000;
+                output = 64000;
+              };
+              cost = {
+                input = 5;
+                output = 25;
+              };
+            };
+          };
+        };
+      };
+    };
+  };
 }

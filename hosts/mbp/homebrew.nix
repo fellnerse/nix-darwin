@@ -30,7 +30,7 @@
     "spotify"
     "steam"
     "sublime-text"
-    "tailscale"
+    "tailscale-app"
     "wave"
   ];
   masApps = {
