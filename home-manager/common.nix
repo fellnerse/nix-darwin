@@ -152,8 +152,10 @@
         Python = {
           language_servers = [
             "ty"
+            "ruff"
             "!basedpyright"
           ];
+          format_on_save = "on";
         };
       };
     };
