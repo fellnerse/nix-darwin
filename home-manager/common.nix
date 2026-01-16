@@ -187,6 +187,12 @@
           ];
         };
       }
+      {
+        context = "!ContextEditor > (Editor && mode == full)";
+        bindings = {
+          "alt-." = "pane::RevealInProjectPanel";
+        };
+      }
     ];
 
     # Custom Tasks
