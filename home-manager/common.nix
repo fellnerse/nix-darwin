@@ -112,6 +112,7 @@
       "fish"
       "toml"
       "opencode"
+      "pytest-language-server"
     ];
 
     userSettings = {
@@ -147,13 +148,16 @@
           language_servers = [
             "nixd"
             "!nil"
+            "..."
           ];
         };
         Python = {
           language_servers = [
             "ty"
             "ruff"
+            "pytest-language-server"
             "!basedpyright"
+            "..."
           ];
           format_on_save = "on";
         };
