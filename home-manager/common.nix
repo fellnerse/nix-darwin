@@ -9,6 +9,8 @@
     unstable.uv
     nixd # nix language server used by zeditor
     nixfmt-rfc-style # nix formatter used by zeditor
+    beads # git-backed issue tracker for AI agents (provides bd completions)
+    gastown # multi-agent orchestration system (includes beads, tmux, git as dependencies, provides gt completions)
   ];
 
   programs.home-manager.enable = true;

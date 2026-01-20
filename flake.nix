@@ -36,6 +36,7 @@
           config.allowUnfree = true;
           overlays = [
             self.overlays.unstable-packages
+            self.overlays.custom-packages
           ];
         };
 
@@ -77,6 +78,12 @@
             system = final.system;
             config.allowUnfree = true;
           };
+        };
+
+        # Custom packages (beads and gastown)
+        custom-packages = final: prev: {
+          beads = final.callPackage ./pkgs/beads.nix { };
+          gastown = final.callPackage ./pkgs/gastown.nix { };
         };
       };
 
