@@ -11,6 +11,8 @@
       gss = "git status -s";
       lz = "lazygit";
       zl = "zellij";
+      # Homebrew is owned by 'private' user (see homebrew.nix), run as that user to avoid permission issues
+      brew = "sudo -u private brew";
     };
 
     shellInit = ''
@@ -33,6 +35,11 @@
 
       # nix-your-shell
       nix-your-shell fish | source
+
+      # Clear any inherited global ANTHROPIC_AUTH_TOKEN to prevent shadowing the universal variable.
+      # GUI apps (like Zed) inherit env vars when launched and pass them to spawned shells as globals,
+      # which take precedence over universal variables set later via `set -Ux`.
+      set --erase -g ANTHROPIC_AUTH_TOKEN
     '';
 
     functions = {
