@@ -17,7 +17,7 @@ buildGoModule rec {
     owner = "steveyegge";
     repo = "gastown";
     rev = "main";
-    hash = "sha256-DoupfKzWrNd3v42Gn90XGa8+PLUF1KEko5RvnLgnfyc=";
+    hash = "sha256-MomC6UMBoH1KgRAXD/cibumrBoyqsKC/XWrdBZA3xhs=";
   };
 
   vendorHash = "sha256-ripY9vrYgVW8bngAyMLh0LkU/Xx1UUaLgmAA7/EmWQU=";
