@@ -24,6 +24,7 @@
     "imageoptim"
     "jetbrains-toolbox"
     "maccy"
+    "macfuse" # Required for sshfs-mac
     "obsidian"
     "signal"
     "slack"
