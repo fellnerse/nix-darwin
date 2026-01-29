@@ -9,8 +9,9 @@
     unstable.uv
     nixd # nix language server used by zeditor
     nixfmt-rfc-style # nix formatter used by zeditor
-    beads # git-backed issue tracker for AI agents (provides bd completions)
-    gastown # multi-agent orchestration system (includes beads, tmux, git as dependencies, provides gt completions)
+    # beads # git-backed issue tracker for AI agents (provides bd completions)
+    # gastown # multi-agent orchestration system (includes beads, tmux, git as dependencies, provides gt completions)
+    stats # shows networking stats in status bar
   ];
 
   programs.home-manager.enable = true;
@@ -35,6 +36,11 @@
     enable = true;
     package = pkgs.openssh;
     enableDefaultConfig = false;
+    matchBlocks = {
+      "pve.local" = {
+        user = "root";
+      };
+    };
   };
 
   programs.delta = {
@@ -228,6 +234,21 @@
     package = pkgs.unstable.opencode;
     settings = {
       share = "disabled";
+      lsp = {
+        pyright = {
+          disabled = true;
+        };
+        ty = {
+          command = [
+            "ty"
+            "server"
+          ];
+          extensions = [
+            ".py"
+            ".pyi"
+          ];
+        };
+      };
       provider = {
         nlcodepilot = {
           name = "NL Codepilot";
