@@ -9,17 +9,17 @@ This is a nix-darwin + home-manager configuration for an Apple Silicon MacBook P
 ## Common Commands
 
 ```bash
-make check          # Validate configuration without building
-make build          # Build system without switching
-make system         # Build and switch system config (requires sudo)
-make user           # Switch home-manager for current user
-make update         # Update all flake inputs
-make update-unstable    # Update only nixpkgs-unstable
-make gc             # Garbage collect old generations
-make trampoline     # Create app trampolines for macOS Spotlight/Dock
+mise run check          # Validate configuration without building
+mise run build          # Build system without switching
+mise run system         # Build and switch system config (requires sudo)
+mise run user           # Switch home-manager for current user
+mise run update         # Update all flake inputs
+mise run update-unstable    # Update only nixpkgs-unstable
+mise run gc             # Garbage collect old generations
+mise run trampoline     # Create app trampolines for macOS Spotlight/Dock
 ```
 
-Always run `make check` before applying changes. Use `make user` for home-manager-only changes (safer, no sudo needed).
+Always run `mise run check` before applying changes. Use `mise run user` for home-manager-only changes (safer, no sudo needed).
 
 ## Architecture
 
@@ -53,6 +53,6 @@ flake.nix                           # Entry point - defines inputs, outputs, ove
 
 ## Troubleshooting
 
-- **Apps not in Spotlight**: Run `make trampoline` and see README.md for mac-app-util issues
-- **Configuration errors**: Run `make check` to see detailed error messages
+- **Apps not in Spotlight**: Run `mise run trampoline` and see README.md for mac-app-util issues
+- **Configuration errors**: Run `mise run check` to see detailed error messages
 - **Rollback**: Use `darwin-rebuild --rollback` or `home-manager generations` to switch back

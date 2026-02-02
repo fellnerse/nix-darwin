@@ -1,0 +1,43 @@
+[tasks.update]
+description = "Update all flake inputs"
+run = "nix flake update"
+
+[tasks.update-unstable]
+description = "Update only nixpkgs-unstable"
+run = "nix flake update nixpkgs-unstable"
+
+[tasks.update-home-manager]
+description = "Update home-manager input"
+run = "nix flake update home-manager"
+
+[tasks.system]
+description = "Build and switch system config (requires sudo)"
+run = "sudo darwin-rebuild switch --flake .#Sebastians-MacBook-Pro-2"
+
+[tasks.check]
+description = "Validate configuration without building"
+run = "sudo darwin-rebuild check --flake .#Sebastians-MacBook-Pro-2"
+
+[tasks.build]
+description = "Build system without switching"
+run = "sudo darwin-rebuild build --flake .#Sebastians-MacBook-Pro-2"
+
+[tasks.trampoline]
+description = "Create app trampolines for macOS Spotlight/Dock"
+run = 'nix run github:hraban/mac-app-util -- mktrampoline "/nix/store/pfm28jpyp52a60ygc57bwn7x1wx7isq4-iterm2-3.5.2/Applications/iTerm2.app" /Applications/MyApp.app'
+
+[tasks.user]
+description = "Switch home-manager for current user"
+run = "home-manager switch --flake .#$USER -b backup"
+
+[tasks.hydra-check]
+description = "Check package availability in Hydra cache"
+run = "nix-shell -p hydra-check --run 'hydra-check uv --arch aarch64-darwin --channel nixpkgs-unstable'"
+
+[tasks.gc]
+description = "Garbage collect old generations"
+run = """
+nix-env --delete-generations old
+nix-store --gc
+nix-collect-garbage -d
+"""
