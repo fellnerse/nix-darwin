@@ -231,6 +231,37 @@
     };
   };
 
+  # Stats: Menu bar app that runs silently in the background
+  # Launched directly via binary with ProcessType = "Interactive" to enable GUI interaction
+  # This launches without showing any windows - perfect for menu bar apps
+  launchd.agents.stats = {
+    enable = true;
+    config = {
+      ProgramArguments = [ "${pkgs.stats}/Applications/Stats.app/Contents/MacOS/Stats" ];
+      RunAtLoad = true;
+      KeepAlive = false;
+      ProcessType = "Interactive";
+    };
+  };
+
+  # Ghostty: Terminal app with hotkey window support
+  # Must use /usr/bin/open with -g flag (background) instead of direct binary launch
+  # Opens an initial window but keeps app in background for hotkey functionality
+  # Direct binary launch fails on macOS; -j flag hides app too much and breaks hotkey
+  launchd.agents.ghostty = {
+    enable = true;
+    config = {
+      ProgramArguments = [
+        "/usr/bin/open"
+        "-g"
+        "-a"
+        "/Applications/Ghostty.app"
+      ];
+      RunAtLoad = true;
+      KeepAlive = false;
+    };
+  };
+
   programs.opencode = {
     enable = true;
     package = pkgs.unstable.opencode;
