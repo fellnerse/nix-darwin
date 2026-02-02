@@ -7,6 +7,7 @@
     shell-gpt
     unstable.claude-code
     unstable.uv
+    unstable.ty
     nixd # nix language server used by zeditor
     nixfmt-rfc-style # nix formatter used by zeditor
     # beads # git-backed issue tracker for AI agents (provides bd completions)
@@ -14,6 +15,7 @@
     stats # shows networking stats in status bar
     gh
     mise
+    pre-commit
   ];
 
   programs.home-manager.enable = true;
