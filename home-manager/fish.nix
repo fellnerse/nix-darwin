@@ -12,7 +12,7 @@
       lz = "lazygit";
       zl = "zellij";
       # Homebrew is owned by 'private' user (see homebrew.nix), run as that user to avoid permission issues
-      brew = "sudo -u private brew";
+      brew = "sudo -u private env HOMEBREW_CACHE=/Users/private/Library/Caches/Homebrew brew";
     };
 
     shellInit = ''

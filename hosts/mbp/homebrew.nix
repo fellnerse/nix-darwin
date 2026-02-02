@@ -17,14 +17,13 @@
   casks = [
     # "bitwarden" the cask version does not support fingerprint auth enymore
     "arc"
-    "bambu-studio"
+    # "bambu-studio" This is super unreliable with all the updates the app wants to install itself
     "bruno"
     "crossover"
     "ghostty"
     "imageoptim"
     "jetbrains-toolbox"
     "maccy"
-    "macfuse" # Required for sshfs-mac
     "obsidian"
     "signal"
     "slack"

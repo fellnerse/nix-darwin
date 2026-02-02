@@ -12,7 +12,8 @@
     # beads # git-backed issue tracker for AI agents (provides bd completions)
     # gastown # multi-agent orchestration system (includes beads, tmux, git as dependencies, provides gt completions)
     stats # shows networking stats in status bar
-    sshfs-mac # SSHFS installer and wrapper for macOS (requires macFUSE from Homebrew)
+    gh
+    mise
   ];
 
   programs.home-manager.enable = true;

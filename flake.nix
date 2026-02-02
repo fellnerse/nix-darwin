@@ -84,7 +84,6 @@
         custom-packages = final: prev: {
           beads = final.callPackage ./pkgs/beads.nix { };
           gastown = final.callPackage ./pkgs/gastown.nix { };
-          sshfs-mac = final.callPackage ./pkgs/sshfs-mac.nix { };
         };
       };
 
