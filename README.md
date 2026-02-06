@@ -1,5 +1,41 @@
 # nix-darwin configuration
 
+## Claude Code MCP Servers
+
+### Serena
+
+[Serena](https://github.com/oraios/serena) provides code-aware tools for semantic code search, refactoring, and project understanding. Installed via home-manager.
+
+**Global configuration (recommended):**
+```bash
+claude mcp add --scope user serena -- serena start-mcp-server --context=claude-code --project-from-cwd
+```
+
+**Per-project configuration:**
+```bash
+claude mcp add serena -- serena start-mcp-server --context claude-code --project "$(pwd)"
+```
+
+Options:
+- `--context claude-code` disables tools that duplicate Claude Code's built-in capabilities
+- `--project-from-cwd` auto-detects project from current directory
+
+### Context7
+
+[Context7](https://github.com/upstash/context7) fetches up-to-date, version-specific documentation directly into your prompt.
+
+**Add to Claude Code:**
+```bash
+claude mcp add --scope user context7 -- npx -y @upstash/context7-mcp
+```
+
+**Usage:** Add "use context7" to your prompt, e.g.: "Create a basic FastAPI app with CORS middleware. use context7"
+
+Optional: Get a free API key at [context7.com/dashboard](https://context7.com/dashboard) for higher rate limits, then:
+```bash
+claude mcp add --scope user context7 -- npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
+```
+
 ## Troubleshooting
 
 ### mac-app-util trampolines: "open: command not found"

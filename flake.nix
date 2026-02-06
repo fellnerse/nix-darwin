@@ -12,6 +12,8 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     mac-app-util.url = "github:hraban/mac-app-util";
     mac-app-util.inputs.nixpkgs.follows = "nixpkgs";
+    serena.url = "github:oraios/serena";
+    serena.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -22,6 +24,7 @@
       nixpkgs-unstable,
       home-manager,
       mac-app-util,
+      serena,
       ...
     }:
     let
@@ -84,6 +87,7 @@
         custom-packages = final: prev: {
           beads = final.callPackage ./pkgs/beads.nix { };
           gastown = final.callPackage ./pkgs/gastown.nix { };
+          serena = serena.packages.${final.system}.default;
         };
       };
 

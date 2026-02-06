@@ -9,6 +9,8 @@
     - always follow a 80/20 approach. KISS. don't do backwards compatible stuff, we are a startup and just change things.
     - never add any claude related info to git commits
     - we use conventional commit messages, but keep in mind that commitizen does not create new releases if the messages is not fix or feat (e.g. refactor does not trigger a new release)
+
+    Always use Context7 MCP when I need library/API documentation, code generation, setup or configuration steps without me having to explicitly ask.
   '';
   # Common packages
   home.packages = with pkgs; [
@@ -25,6 +27,7 @@
     gh
     mise
     pre-commit
+    serena
   ];
 
   programs.home-manager.enable = true;
