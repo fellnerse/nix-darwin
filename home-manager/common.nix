@@ -1,6 +1,15 @@
 { pkgs, ... }:
 {
   imports = [ ./fish.nix ];
+
+  # Claude Code global instructions
+  home.file.".claude/CLAUDE.md".text = ''
+    you can check the coverage of the current branch against main with `aurora check-coverage`
+    - always use uv for running python stuff, otherwise packages are missing etc. uv is managing the environment.
+    - always follow a 80/20 approach. KISS. don't do backwards compatible stuff, we are a startup and just change things.
+    - never add any claude related info to git commits
+    - we use conventional commit messages, but keep in mind that commitizen does not create new releases if the messages is not fix or feat (e.g. refactor does not trigger a new release)
+  '';
   # Common packages
   home.packages = with pkgs; [
     nix-your-shell
