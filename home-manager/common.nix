@@ -28,6 +28,7 @@
     mise
     pre-commit
     serena
+    nodejs_24 # needed for context7, as it runs with npx
   ];
 
   programs.home-manager.enable = true;
@@ -296,6 +297,26 @@
           ];
         };
       };
+      mcp = {
+        serena = {
+          type = "local";
+          command = [
+            "serena"
+            "start-mcp-server"
+            "--open-web-dashboard=false"
+          ];
+          enabled = true;
+        };
+        context7 = {
+          type = "local";
+          command = [
+            "npx"
+            "-y"
+            "@upstash/context7-mcp"
+          ];
+          enabled = true;
+        };
+      };
       provider = {
         nlcodepilot = {
           name = "NL Codepilot";
@@ -311,12 +332,12 @@
                 output = 64000;
               };
               cost = {
-                input = 1.1;
-                output = 5.5;
+                input = 3;
+                output = 15;
               };
             };
-            claude-opus-4-5-20251101 = {
-              name = "Claude Opus 4.5";
+            claude-opus-4-6 = {
+              name = "Claude Opus 4.6";
               limit = {
                 context = 200000;
                 output = 64000;

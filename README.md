@@ -8,17 +8,17 @@
 
 **Global configuration (recommended):**
 ```bash
-claude mcp add --scope user serena -- serena start-mcp-server --context=claude-code --project-from-cwd
-```
+claude mcp add --scope user serena -- serena start-mcp-server --context=claude-code --project-from-cwd --open-web-dashboard false```
 
 **Per-project configuration:**
 ```bash
-claude mcp add serena -- serena start-mcp-server --context claude-code --project "$(pwd)"
+claude mcp add serena -- serena start-mcp-server --context claude-code --project "$(pwd) --open-web-dashboard false"
 ```
 
 Options:
 - `--context claude-code` disables tools that duplicate Claude Code's built-in capabilities
 - `--project-from-cwd` auto-detects project from current directory
+- `--open-web-dashboard false` disables the web dashboard
 
 ### Context7
 
