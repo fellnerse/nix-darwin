@@ -248,13 +248,21 @@
 
   # Stats: Menu bar app that runs silently in the background
   # Launched directly via binary with ProcessType = "Interactive" to enable GUI interaction
-  # This launches without showing any windows - perfect for menu bar apps
+  # KeepAlive.SuccessfulExit = false restarts if it crashes, ThrottleInterval prevents rapid restarts
+  # LaunchOnlyOnce + delay wrapper ensures GUI session is ready before starting
   launchd.agents.stats = {
     enable = true;
     config = {
-      ProgramArguments = [ "${pkgs.stats}/Applications/Stats.app/Contents/MacOS/Stats" ];
+      ProgramArguments = [
+        "/bin/sh"
+        "-c"
+        "sleep 5 && exec ${pkgs.stats}/Applications/Stats.app/Contents/MacOS/Stats"
+      ];
       RunAtLoad = true;
-      KeepAlive = false;
+      KeepAlive = {
+        SuccessfulExit = false;
+      };
+      ThrottleInterval = 30;
       ProcessType = "Interactive";
     };
   };
@@ -282,6 +290,21 @@
     package = pkgs.unstable.opencode;
     settings = {
       share = "disabled";
+      # Use a smaller/same model for compaction (summarization when context gets full)
+      small_model = "nlcodepilot/claude-latest";
+      compaction = {
+        auto = true;
+        prune = true;
+      };
+      # Agent-specific config (experimental - from Gemini suggestion)
+      agent = {
+        compaction = {
+          model = "nlcodepilot/claude-latest";
+          options = {
+            drop_params = true;
+          };
+        };
+      };
       lsp = {
         pyright = {
           disabled = true;
@@ -323,6 +346,7 @@
           npm = "@ai-sdk/openai-compatible";
           options = {
             baseURL = "https://llm-proxy.edgez.live";
+            litellmProxy = "true";
           };
           models = {
             claude-latest = {
