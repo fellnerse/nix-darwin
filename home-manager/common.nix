@@ -29,6 +29,7 @@
     pre-commit
     serena
     nodejs_24 # needed for context7, as it runs with npx
+    glab
   ];
 
   programs.home-manager.enable = true;

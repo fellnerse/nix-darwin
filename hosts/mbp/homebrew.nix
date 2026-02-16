@@ -13,6 +13,7 @@
     "docker-credential-helper"
     "glib"
     "mas"
+    "mole"
   ];
   casks = [
     # "bitwarden" the cask version does not support fingerprint auth enymore
@@ -31,7 +32,6 @@
     "steam"
     "sublime-text"
     "tailscale-app"
-    "wave"
   ];
   masApps = {
     "Bitwarden" = 1352778147;

@@ -12,7 +12,23 @@ run = "nix flake update home-manager"
 
 [tasks.system]
 description = "Build and switch system config (requires sudo)"
-run = "sudo darwin-rebuild switch --flake .#Sebastians-MacBook-Pro-2"
+run = """
+output=$(sudo darwin-rebuild switch --flake .#Sebastians-MacBook-Pro-2 2>&1)
+exit_code=$?
+echo "$output"
+if [ $exit_code -ne 0 ]; then
+  if echo "$output" | grep -q "Failed to find pkg to update"; then
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "TIP: Mac App Store update failed. Try one of:"
+    echo "  1. Open App Store and update the app manually"
+    echo "  2. Run: mas upgrade <app_id>"
+    echo "  3. Re-run 'mise run system' (sometimes retrying works)"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  fi
+  exit $exit_code
+fi
+"""
 
 [tasks.check]
 description = "Validate configuration without building"
