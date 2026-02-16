@@ -58,6 +58,9 @@
       "pve.local" = {
         user = "root";
       };
+      "homeassistant.local" = {
+        user = "root";
+      };
     };
   };
 
