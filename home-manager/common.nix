@@ -374,6 +374,11 @@
                 input = 5;
                 output = 25;
               };
+              options = {
+                allowed_openai_params = [
+                  "tool_choice"
+                ];
+              };
             };
           };
         };

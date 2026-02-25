@@ -1,5 +1,33 @@
 # nix-darwin configuration
 
+## OpenCode Configuration
+
+### Claude Opus 4.6 with Tool Use
+
+When using Claude Opus 4.6 in OpenCode with MCP servers (Serena, Context7), you need to explicitly allow the `tool_choice` parameter in the model configuration. This tells litellm that `tool_choice` is allowed and should be passed through to Bedrock.
+
+The configuration is in `home-manager/common.nix`:
+```nix
+claude-opus-4-6 = {
+  name = "Claude Opus 4.6";
+  limit = {
+    context = 200000;
+    output = 64000;
+  };
+  cost = {
+    input = 5;
+    output = 25;
+  };
+  options = {
+    allowed_openai_params = [
+      "tool_choice"
+    ];
+  };
+};
+```
+
+Without this configuration, you'll get: `bedrock does not support parameters: ['tool_choice']`
+
 ## Claude Code MCP Servers
 
 ### Serena
