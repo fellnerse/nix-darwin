@@ -61,6 +61,17 @@
       "homeassistant.local" = {
         user = "root";
       };
+      # Tailscale hostname for HA - works from anywhere
+      "homeassistant.tail" = {
+        hostname = "homeassistant.tail401ae4.ts.net";
+        user = "root";
+      };
+      # PVE via Tailscale -> HA jump host - works from anywhere
+      "pve.tail" = {
+        hostname = "pve.local";
+        user = "root";
+        proxyJump = "homeassistant.tail";
+      };
     };
   };
 
