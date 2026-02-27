@@ -386,9 +386,7 @@
                 output = 25;
               };
               options = {
-                allowed_openai_params = [
-                  "tool_choice"
-                ];
+                drop_params = true;
               };
             };
           };
