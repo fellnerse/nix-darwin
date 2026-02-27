@@ -385,9 +385,6 @@
                 input = 5;
                 output = 25;
               };
-              options = {
-                drop_params = true;
-              };
             };
           };
         };
