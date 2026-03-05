@@ -72,6 +72,17 @@
         user = "root";
         proxyJump = "homeassistant.tail";
       };
+      # OpenClaw LXC container on PVE - reachable via HA jump host
+      "openclaw.tail" = {
+        hostname = "192.168.178.61";
+        user = "sefe";
+        proxyJump = "homeassistant.tail";
+      };
+      "openclaw.tail.root" = {
+        hostname = "192.168.178.61";
+        user = "root";
+        proxyJump = "homeassistant.tail";
+      };
     };
   };
 
