@@ -17,6 +17,7 @@
     nix-your-shell
     shell-gpt
     unstable.claude-code
+    unstable.gemini-cli
     unstable.uv
     unstable.ty
     nixd # nix language server used by zeditor
