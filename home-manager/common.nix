@@ -249,6 +249,18 @@
           "alt-." = "pane::RevealInProjectPanel";
         };
       }
+      {
+        context = "!Terminal"; # usually it is bound to Workspace, but I want to be able to use cmd p in claude code
+        bindings = {
+          "cmd-p" = "file_finder::Toggle";
+        };
+      }
+      {
+        context = "Workspace";
+        bindings = {
+          "cmd-p" = null;
+        };
+      }
     ];
 
     # Custom Tasks
