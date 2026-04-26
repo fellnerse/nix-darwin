@@ -32,6 +32,10 @@ flake.nix                           # Entry point - defines inputs, outputs, ove
     ├── common.nix                  # Shared user config: shell, git, editors, CLI tools
     ├── home.nix                    # "sefe" user - imports common.nix + work settings
     └── home-private.nix            # "private" user - imports common.nix + personal settings
+
+## Documented Solutions
+
+`docs/solutions/` — documented solutions to past problems (bugs, best practices, workflow patterns), organized by category with YAML frontmatter (`module`, `tags`, `problem_type`). Relevant when implementing or debugging in documented areas.
 ```
 
 ### Key Patterns
