@@ -76,19 +76,29 @@
 
       overlays = {
         # Makes unstable packages available as pkgs.unstable.package-name
-        unstable-packages = final: prev: {
-          unstable = import inputs.nixpkgs-unstable {
-            system = final.system;
-            config.allowUnfree = true;
+        unstable-packages =
+          final: prev:
+          let
+            system = final.stdenv.hostPlatform.system;
+          in
+          {
+            unstable = import inputs.nixpkgs-unstable {
+              inherit system;
+              config.allowUnfree = true;
+            };
           };
-        };
 
         # Custom packages (beads and gastown)
-        custom-packages = final: prev: {
-          beads = final.callPackage ./pkgs/beads.nix { };
-          gastown = final.callPackage ./pkgs/gastown.nix { };
-          serena = serena.packages.${final.system}.default;
-        };
+        custom-packages =
+          final: prev:
+          let
+            system = final.stdenv.hostPlatform.system;
+          in
+          {
+            beads = final.callPackage ./pkgs/beads.nix { };
+            gastown = final.callPackage ./pkgs/gastown.nix { };
+            serena = serena.packages.${system}.default;
+          };
       };
 
       # Use consistent pkgs instead of legacyPackages for formatter
