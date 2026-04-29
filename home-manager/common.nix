@@ -209,9 +209,18 @@
             "ruff"
             "pytest-language-server"
             "!basedpyright"
+            "!pyright"
             "..."
           ];
           format_on_save = "on";
+          code_actions_on_format = {
+            "source.organizeImports.ruff" = true;
+          };
+          formatter = {
+            language_server = {
+              name = "ruff";
+            };
+          };
         };
       };
     };
