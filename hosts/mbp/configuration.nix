@@ -37,7 +37,14 @@
       ];
     };
     optimise.automatic = true;
-    registry.nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
+    registry = {
+      # This makes 'nix shell u#pkg' work
+      u.flake = inputs.nixpkgs-unstable;
+
+      # Optional: Pin 'nixpkgs' to your flake's stable input too
+      # This ensures 'nix shell nixpkgs#pkg' uses your local lockfile version
+      nixpkgs.flake = inputs.nixpkgs;
+    };
   };
   # The default Nix build user group ID was changed from 30000 to 350.
   #You are currently managing Nix build users with nix-darwin, but your
