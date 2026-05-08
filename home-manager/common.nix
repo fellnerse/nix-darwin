@@ -313,6 +313,8 @@
             "task::Spawn"
             { "task_name" = "Copy Azure DevOps Permalink"; }
           ];
+          "cmd-shift-p" = "git::PullRebase";
+          "cmd-shift-m" = "workspace::CloseAllDocks";
         };
       }
       {
@@ -328,6 +330,7 @@
         };
       }
       {
+        # allow the usage of ctrl-p in claude code for model selection
         context = "Workspace";
         bindings = {
           "cmd-p" = null;
