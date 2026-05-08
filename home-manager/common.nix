@@ -1,4 +1,48 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
+let
+  # Written to ~/.claude.json — replaces mcpServers entirely (declarative source of truth)
+  claudeMcpServers = {
+    atlassian = {
+      type = "http";
+      url = "https://mcp.atlassian.com/v1/mcp";
+    };
+    context7 = {
+      type = "stdio";
+      command = "npx";
+      args = [
+        "-y"
+        "@upstash/context7-mcp"
+      ];
+      env = { };
+    };
+    serena = {
+      type = "stdio";
+      command = "serena";
+      args = [
+        "start-mcp-server"
+        "--context=claude-code"
+        "--project-from-cwd"
+        "--open-web-dashboard"
+        "false"
+      ];
+      env = { };
+    };
+  };
+  # Written to ~/.claude/settings.json — merged (Claude Code owns the rest)
+  claudeStaticSettings = {
+    enabledPlugins = {
+      "compound-engineering@compound-engineering-plugin" = true;
+    };
+    extraKnownMarketplaces = {
+      "compound-engineering-plugin" = {
+        source = {
+          source = "github";
+          repo = "EveryInc/compound-engineering-plugin";
+        };
+      };
+    };
+  };
+in
 {
   imports = [ ./fish.nix ];
 
@@ -12,6 +56,23 @@
 
     Always use Context7 MCP when I need library/API documentation, code generation, setup or configuration steps without me having to explicitly ask.
   '';
+
+  home.activation.claudeMcpServers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    f="$HOME/.claude.json"
+    [ -f "$f" ] || echo '{}' > "$f"
+    tmp=$(${pkgs.jq}/bin/jq --argjson s '${builtins.toJSON claudeMcpServers}' \
+      '.mcpServers = $s' "$f")
+    echo "$tmp" > "$f"
+  '';
+
+  home.activation.claudeStaticSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    f="$HOME/.claude/settings.json"
+    [ -f "$f" ] || echo '{}' > "$f"
+    tmp=$(${pkgs.jq}/bin/jq --argjson s '${builtins.toJSON claudeStaticSettings}' \
+      '. * $s' "$f")
+    echo "$tmp" > "$f"
+  '';
+
   # Common packages
   home.packages = with pkgs; [
     nix-your-shell
@@ -267,6 +328,8 @@
         };
       };
       # this is the setting for the zed native agent, here we reference the one from above, with the claude-latest default
+      # I'm not sure where the auth tokens comes from, but this seems to be currently out of budget, where as the claude code integration still works
+      # ah this is set via NL_CODEPILOT_API_KEY, which was different from ANTHROPIC_AUTH_TOKEN
       agent = {
         default_model = {
           provider = "NL-Codepilot";
@@ -285,6 +348,10 @@
           prompt_format = "infer";
           max_output_tokens = 64;
         };
+      };
+      feature_flags = {
+        tabular-data-preview = "on";
+        notebooks = "on";
       };
     };
 
