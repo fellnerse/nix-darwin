@@ -36,8 +36,8 @@ fi
 
 # 3. Create the container
 echo "Creating container $CTID ($HOSTNAME)..."
-# Note: --ssh-public-keys expects the actual key string
-PUBLIC_KEY=$(cat "$SSH_KEY_PATH")
+# Upload key to PVE first
+scp "$SSH_KEY_PATH" "$PVE_HOST:/tmp/scraper.pub"
 
 ssh "$PVE_HOST" "pct create $CTID $TEMPLATE \
     --hostname $HOSTNAME \
@@ -45,11 +45,14 @@ ssh "$PVE_HOST" "pct create $CTID $TEMPLATE \
     --memory $MEMORY \
     --swap $SWAP \
     --net0 name=eth0,bridge=$BRIDGE,ip=$IP,gw=$GW,firewall=1 \
-    --rootfs local-lvm:$DISK,discard=on \
+    --rootfs local-lvm:$DISK \
     --features nesting=1,keyctl=1 \
     --unprivileged 1 \
     --onboot 1 \
-    --ssh-public-keys \"$PUBLIC_KEY\""
+    --ssh-public-keys /tmp/scraper.pub"
+
+# Cleanup key on PVE
+ssh "$PVE_HOST" "rm /tmp/scraper.pub"
 
 # 4. Start the container
 echo "Starting container $CTID..."

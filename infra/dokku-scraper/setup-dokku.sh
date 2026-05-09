@@ -4,17 +4,20 @@ set -euo pipefail
 # Configuration
 APP_NAME="sauspiel-scraper"
 DOKKU_VERSION="v0.35.10"
-TARGET_HOST="scraper.tail.root"
+# Use direct jump host command since aliases might not be active in current shell
+TARGET_IP="192.168.178.62"
+JUMP_HOST="root@homeassistant.tail401ae4.ts.net"
+SSH_CMD="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -J $JUMP_HOST root@$TARGET_IP"
 
 echo "--- Dokku & Postgres Setup ---"
 
 # Check connectivity
-if ! ssh -o ConnectTimeout=5 "$TARGET_HOST" exit 0 2>/dev/null; then
-    echo "ERROR: Cannot reach $TARGET_HOST. Is the bootstrap script finished and the container up?"
+if ! $SSH_CMD exit 0 2>/dev/null; then
+    echo "ERROR: Cannot reach $TARGET_IP via $JUMP_HOST. Is the bootstrap script finished and the container up?"
     exit 1
 fi
 
-ssh "$TARGET_HOST" bash <<EOF
+$SSH_CMD bash <<EOF
 set -euo pipefail
 
 echo "Updating system..."
