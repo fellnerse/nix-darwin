@@ -145,6 +145,17 @@ in
         user = "root";
         proxyJump = "homeassistant.tail";
       };
+      # Dokku Scraper LXC container on PVE - reachable via HA jump host
+      "scraper.tail" = {
+        hostname = "192.168.178.62";
+        user = "dokku"; # Dokku uses a dokku user for git deploys, but for setup we use root
+        proxyJump = "homeassistant.tail";
+      };
+      "scraper.tail.root" = {
+        hostname = "192.168.178.62";
+        user = "root";
+        proxyJump = "homeassistant.tail";
+      };
     };
   };
 
