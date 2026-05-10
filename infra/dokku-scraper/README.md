@@ -37,9 +37,27 @@ tailscale up
 ```
 
 ### 3. Deploy the App
-Add the Dokku remote to your application repository:
+Add the Dokku remotes to your application repository:
+
+**Production:**
 ```bash
 git remote add dokku dokku@scraper.tail:sauspiel-scraper
 git push dokku main
 ```
-Note: Ensure your local machine is also on Tailscale to resolve `scraper.tail`.
+
+**Development:**
+```bash
+git remote add dokku-dev dokku@scraper.tail:sauspiel-scraper-dev
+git push dokku-dev develop:main
+```
+
+## Database Access
+
+Both databases are exposed via Tailscale for remote access from your dev machine.
+
+| Environment | Host | Port | Database |
+| :--- | :--- | :--- | :--- |
+| **Production** | `scraper.tail` | `5432` | `sauspiel_scraper_db` |
+| **Development** | `scraper.tail` | `5433` | `sauspiel_scraper_db_dev` |
+
+Note: Connection strings start with `postgresql://`.
