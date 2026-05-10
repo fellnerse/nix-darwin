@@ -33,21 +33,23 @@ if ! command -v dokku >/dev/null; then
 fi
 
 # 2. Install PostgreSQL Plugin
-if ! dokku plugin:report postgres >/dev/null 2>&1; then
+if ! dokku plugin:list | grep -q "postgres"; then
     echo "Installing dokku-postgres..."
     dokku plugin:install https://github.com/dokku/dokku-postgres.git
 fi
 
 # 3. Create App and Database
-if ! dokku apps:report $APP_NAME >/dev/null 2>&1; then
+if ! dokku apps:list | grep -q "^$APP_NAME$"; then
     echo "Creating app $APP_NAME..."
     dokku apps:create $APP_NAME
 fi
 
-if ! dokku postgres:report $APP_NAME-db >/dev/null 2>&1; then
+if ! dokku postgres:list | grep -q "^$APP_NAME-db$"; then
     echo "Creating database $APP_NAME-db..."
     dokku postgres:create $APP_NAME-db
     dokku postgres:link $APP_NAME-db $APP_NAME
+    echo "Exposing database on port 5432..."
+    dokku postgres:expose $APP_NAME-db 5432
 fi
 
 # 4. Tailscale Setup (Userspace mode for LXC)
