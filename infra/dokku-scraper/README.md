@@ -51,6 +51,19 @@ git remote add dokku-dev dokku@scraper.tail:sauspiel-scraper-dev
 git push dokku-dev develop:main
 ```
 
+## GitHub Actions Deployment
+
+The application repository includes a GitHub Actions workflow that is **branch-aware**:
+
+- Pushes to **`main`** deploy to `sauspiel-scraper` (Production).
+- Pushes to **`develop`** deploy to `sauspiel-scraper-dev` (Development).
+
+### Required Secrets
+Add these to your application repo:
+1. `TS_OAUTH_CLIENT_ID` / `TS_OAUTH_SECRET`
+2. `DOKKU_HOST` (e.g. `scraper.tailnet-name.ts.net`)
+3. `SSH_PRIVATE_KEY` (corresponding to the key in Dokku's `admin`)
+
 ## Database Access
 
 Both databases are exposed via Tailscale for remote access from your dev machine.
