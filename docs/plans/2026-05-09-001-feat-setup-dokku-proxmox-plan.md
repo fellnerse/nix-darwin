@@ -53,7 +53,7 @@ Render's free tier lacks persistent ephemeral storage for SQLite. To ensure data
 ---
 
 ## Key Technical Decisions
-- **Resource Allocation:** 2 Cores, 2GB RAM (1GB Physical + 1GB Swap), 10GB Disk.
+- **Resource Allocation:** 2 Cores, 2GB RAM (1GB Physical + 1GB Swap), 15GB Disk.
 - **LXC ID:** `102` (next available after `101`).
 - **OS:** Debian 12 (Bookworm).
 - **Storage Driver:** Docker `overlay2` (LVM-Thin on PVE host).
@@ -65,7 +65,7 @@ To "really make sure" we don't hit the 100% Thin Pool crash documented in `proxm
 1. **Pre-flight Check:** `bootstrap.sh` will query `lvs pve/data` and abort if `Data% > 70%`.
 2. **Automatic TRIM:** The LXC will be created with `-rootfs local-lvm:10,discard=on` to ensure deleted blocks are reclaimed immediately by the host.
 3. **Build Cleanup:** `setup-dokku.sh` will install a cron job for `dokku cleanup:buildcache` and `docker system prune -f` to prevent image layer accumulation.
-4. **Conservative Sizing:** We have reduced the disk from 15GB to 10GB. With current usage at 34%, this keeps the total virtual allocation (HAOS 32G + OpenClaw 12G + Scraper 10G = 54G) well below the 68GB physical limit, providing a ~14GB absolute safety buffer even if all containers hit 100% usage.
+4. **Conservative Sizing:** We have set the disk to 15GB. With current usage at 48%, this keeps the total virtual allocation (HAOS 32G + OpenClaw 12G + Scraper 15G = 59G) well below the 68GB physical limit, providing a ~9GB absolute safety buffer even if all containers hit 100% usage.
 
 ---
 
