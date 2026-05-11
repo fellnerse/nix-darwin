@@ -8,10 +8,7 @@ DOKKU_VERSION="v0.35.10"
 CREATE_DEV_ENV="${CREATE_DEV_ENV:-false}"
 
 # Domain Configuration
-DOMAIN="sebastianfellner.de"
-PROD_DOMAIN="sauspiel.$DOMAIN"
-DEV_DOMAIN="sauspiel-dev.$DOMAIN"
-LE_EMAIL="hey@sebastianfellner.de"
+TS_DOMAIN="scraper.tail401ae4.ts.net"
 
 # Use direct jump host command since aliases might not be active in current shell
 TARGET_IP="192.168.178.62"
@@ -28,8 +25,7 @@ fi
 
 # Pass variables to the remote shell explicitly
 $SSH_CMD APP_NAME="$APP_NAME" DOKKU_VERSION="$DOKKU_VERSION" \
-         CREATE_DEV_ENV="$CREATE_DEV_ENV" PROD_DOMAIN="$PROD_DOMAIN" \
-         DEV_DOMAIN="$DEV_DOMAIN" LE_EMAIL="$LE_EMAIL" bash <<'EOF'
+         CREATE_DEV_ENV="$CREATE_DEV_ENV" TS_DOMAIN="$TS_DOMAIN" bash <<'EOF'
 set -euo pipefail
 
 echo "Updating system..."
@@ -50,13 +46,6 @@ if ! dokku plugin:list | grep -q "postgres"; then
     dokku plugin:install https://github.com/dokku/dokku-postgres.git || echo "Plugin already installed."
 fi
 
-# Let's Encrypt
-if ! dokku plugin:list | grep -q "letsencrypt"; then
-    echo "Installing dokku-letsencrypt..."
-    dokku plugin:install https://github.com/dokku/dokku-letsencrypt.git || echo "Plugin already installed."
-    dokku letsencrypt:set --global email "$LE_EMAIL"
-fi
-
 # 3. Create Production App and Database
 if ! dokku apps:list | grep -q "^$APP_NAME$"; then
     echo "Creating app $APP_NAME..."
@@ -64,8 +53,8 @@ if ! dokku apps:list | grep -q "^$APP_NAME$"; then
 fi
 
 # Set Production Domain
-echo "Setting domain for $APP_NAME to $PROD_DOMAIN..."
-dokku domains:set "$APP_NAME" "$PROD_DOMAIN"
+echo "Setting domain for $APP_NAME to $TS_DOMAIN..."
+dokku domains:set "$APP_NAME" "$TS_DOMAIN"
 
 if ! dokku postgres:list | grep -q "^$APP_NAME-db$"; then
     echo "Creating database $APP_NAME-db..."
@@ -85,9 +74,10 @@ if [ "$CREATE_DEV_ENV" = "true" ]; then
         dokku apps:create "$DEV_APP"
     fi
     
-    # Set Dev Domain
-    echo "Setting domain for $DEV_APP to $DEV_DOMAIN..."
-    dokku domains:set "$DEV_APP" "$DEV_DOMAIN"
+    # Configure Port Routing for Dev (instead of domains)
+    echo "Configuring port routing for $DEV_APP (Port 8080)..."
+    dokku proxy:ports-add "$DEV_APP" http:8080:5000 || true
+    dokku proxy:ports-remove "$DEV_APP" http:80:5000 || true
 
     if ! dokku postgres:list | grep -q "^$DEV_DB$"; then
         echo "Creating dev database $DEV_DB..."
@@ -116,6 +106,13 @@ OVERRIDE
     echo "Tailscale installed. You will need to run 'tailscale up' manually to authenticate."
 fi
 
+# Enable Funnels
+echo "Enabling Tailscale Funnels..."
+tailscale funnel --bg 443 || echo "Funnel 443 already active or failed."
+if [ "$CREATE_DEV_ENV" = "true" ]; then
+    tailscale funnel --bg 8443 || echo "Funnel 8443 already active or failed."
+fi
+
 # 6. Thin Pool Safety Cron Jobs
 echo "Updating safety cron jobs..."
 cat > /etc/cron.daily/dokku-safety-cleanup <<CRON
@@ -133,10 +130,8 @@ EOF
 
 echo "--- Setup Complete ---"
 echo "Next steps:"
-echo "1. Authenticate Tailscale: ssh scraper.tail.root 'tailscale up'"
-echo "2. Enable Funnel: ssh scraper.tail.root 'tailscale funnel 443 on'"
-echo "3. Deploy Production: git remote add dokku dokku@scraper.tail:$APP_NAME"
-echo "   Wait until AFTER your first deploy to enable SSL: ssh scraper.tail.root 'dokku letsencrypt:enable $APP_NAME'"
+echo "1. Authenticate Tailscale (if not already): ssh scraper.tail.root 'tailscale up'"
+echo "2. Deploy Production: git remote add dokku dokku@scraper.tail:$APP_NAME"
 if [ "$CREATE_DEV_ENV" = "true" ]; then
-    echo "4. Deploy Development: git remote add dokku-dev dokku@scraper.tail:${APP_NAME}-dev"
+    echo "3. Deploy Development: git remote add dokku-dev dokku@scraper.tail:${APP_NAME}-dev"
 fi
