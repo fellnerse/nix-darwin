@@ -24,7 +24,7 @@ Run from this machine (uses `pve.tail` SSH alias):
 ```
 
 ### 2. Setup Dokku & Tailscale
-Once the LXC is up and reachable, run the setup script. This installs Dokku, PostgreSQL, and Tailscale (userspace mode).
+Once the LXC is up and reachable, run the setup script. This installs Dokku, PostgreSQL, Let's Encrypt, and Tailscale (userspace mode).
 ```bash
 ./setup-dokku.sh
 ```
@@ -36,13 +36,25 @@ ssh scraper.tail.root
 tailscale up
 ```
 
+**Public Exposure (Tailscale Funnel)**
+To allow public traffic (IPv4) to reach your private LXC:
+```bash
+ssh scraper.tail.root "tailscale funnel 443 on"
+```
+
 ### 3. Deploy the App
 Add the Dokku remotes to your application repository:
 
-**Production:**
+**Production (sauspiel.sebastianfellner.de):**
 ```bash
 git remote add dokku dokku@scraper.tail:sauspiel-scraper
 git push dokku main
+```
+
+**SSL Activation:**
+Wait until **after** your first successful deploy, then enable SSL:
+```bash
+ssh scraper.tail.root "dokku letsencrypt:enable sauspiel-scraper"
 ```
 
 **Development:**

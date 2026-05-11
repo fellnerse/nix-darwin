@@ -7,6 +7,12 @@ DOKKU_VERSION="v0.35.10"
 # Use environment variable or default to false
 CREATE_DEV_ENV="${CREATE_DEV_ENV:-false}"
 
+# Domain Configuration
+DOMAIN="sebastianfellner.de"
+PROD_DOMAIN="sauspiel.$DOMAIN"
+DEV_DOMAIN="sauspiel-dev.$DOMAIN"
+LE_EMAIL="hey@sebastianfellner.de"
+
 # Use direct jump host command since aliases might not be active in current shell
 TARGET_IP="192.168.178.62"
 JUMP_HOST="root@homeassistant.tail401ae4.ts.net"
@@ -20,8 +26,10 @@ if ! $SSH_CMD exit 0 >/dev/null 2>&1; then
     exit 1
 fi
 
-# Pass variables to the remote shell explicitly to avoid heredoc expansion issues
-$SSH_CMD APP_NAME="$APP_NAME" DOKKU_VERSION="$DOKKU_VERSION" CREATE_DEV_ENV="$CREATE_DEV_ENV" bash <<'EOF'
+# Pass variables to the remote shell explicitly
+$SSH_CMD APP_NAME="$APP_NAME" DOKKU_VERSION="$DOKKU_VERSION" \
+         CREATE_DEV_ENV="$CREATE_DEV_ENV" PROD_DOMAIN="$PROD_DOMAIN" \
+         DEV_DOMAIN="$DEV_DOMAIN" LE_EMAIL="$LE_EMAIL" bash <<'EOF'
 set -euo pipefail
 
 echo "Updating system..."
@@ -35,11 +43,18 @@ if ! command -v dokku >/dev/null; then
     DOKKU_TAG=$DOKKU_VERSION bash bootstrap.sh
 fi
 
-# 2. Install PostgreSQL Plugin
-# Use 'dokku plugin' to check specifically for the postgres plugin
+# 2. Install Plugins
+# PostgreSQL
 if ! dokku plugin:report postgres --plugin-enabled >/dev/null 2>&1; then
     echo "Installing dokku-postgres..."
-    dokku plugin:install https://github.com/dokku/dokku-postgres.git || echo "Plugin already installed or failed to install."
+    dokku plugin:install https://github.com/dokku/dokku-postgres.git || echo "Plugin already installed."
+fi
+
+# Let's Encrypt
+if ! dokku plugin:report letsencrypt --plugin-enabled >/dev/null 2>&1; then
+    echo "Installing dokku-letsencrypt..."
+    dokku plugin:install https://github.com/dokku/dokku-letsencrypt.git
+    dokku letsencrypt:set --global email "$LE_EMAIL"
 fi
 
 # 3. Create Production App and Database
@@ -47,6 +62,9 @@ if ! dokku apps:list | grep -q "^$APP_NAME$"; then
     echo "Creating app $APP_NAME..."
     dokku apps:create "$APP_NAME"
 fi
+
+# Set Production Domain
+dokku domains:set "$APP_NAME" "$PROD_DOMAIN"
 
 if ! dokku postgres:list | grep -q "^$APP_NAME-db$"; then
     echo "Creating database $APP_NAME-db..."
@@ -61,17 +79,20 @@ if [ "$CREATE_DEV_ENV" = "true" ]; then
     DEV_APP="${APP_NAME}-dev"
     DEV_DB="${APP_NAME}-db-dev"
 
-    if ! dokku apps:list | grep -q "^$DEV_APP$"; then
-        echo "Creating dev app $DEV_APP..."
-        dokku apps:create "$DEV_APP"
+    if ! dokku apps:list | grep -q "^\$DEV_APP$"; then
+        echo "Creating dev app \$DEV_APP..."
+        dokku apps:create \$DEV_APP
     fi
 
-    if ! dokku postgres:list | grep -q "^$DEV_DB$"; then
-        echo "Creating dev database $DEV_DB..."
-        dokku postgres:create "$DEV_DB"
-        dokku postgres:link "$DEV_DB" "$DEV_APP"
+    # Set Dev Domain
+    dokku domains:set "\$DEV_APP" "$DEV_DOMAIN"
+
+    if ! dokku postgres:list | grep -q "^\$DEV_DB$"; then
+        echo "Creating dev database \$DEV_DB..."
+        dokku postgres:create \$DEV_DB
+        dokku postgres:link \$DEV_DB \$DEV_APP
         echo "Exposing dev database on port 5433..."
-        dokku postgres:expose "$DEV_DB" 5433
+        dokku postgres:expose \$DEV_DB 5433
     fi
 fi
 
@@ -111,7 +132,9 @@ EOF
 echo "--- Setup Complete ---"
 echo "Next steps:"
 echo "1. Authenticate Tailscale: ssh scraper.tail.root 'tailscale up'"
-echo "2. Deploy Production: git remote add dokku dokku@scraper.tail:$APP_NAME"
+echo "2. Enable Funnel: ssh scraper.tail.root 'tailscale funnel 443 on'"
+echo "3. Deploy Production: git remote add dokku dokku@scraper.tail:$APP_NAME"
+echo "   Wait until AFTER your first deploy to enable SSL: ssh scraper.tail.root 'dokku letsencrypt:enable $APP_NAME'"
 if [ "$CREATE_DEV_ENV" = "true" ]; then
-    echo "3. Deploy Development: git remote add dokku-dev dokku@scraper.tail:${APP_NAME}-dev"
+    echo "4. Deploy Development: git remote add dokku-dev dokku@scraper.tail:${APP_NAME}-dev"
 fi
