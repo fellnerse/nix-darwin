@@ -108,9 +108,9 @@ fi
 
 # Enable Funnels
 echo "Enabling Tailscale Funnels..."
-tailscale funnel --bg 443 || echo "Funnel 443 already active or failed."
+tailscale funnel --bg --https=443 http://127.0.0.1:80 || echo "Funnel 443 already active or failed."
 if [ "$CREATE_DEV_ENV" = "true" ]; then
-    tailscale funnel --bg 8443 || echo "Funnel 8443 already active or failed."
+    tailscale funnel --bg --https=8443 http://127.0.0.1:8080 || echo "Funnel 8443 already active or failed."
 fi
 
 # 6. Thin Pool Safety Cron Jobs
