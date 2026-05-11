@@ -40,8 +40,8 @@ if ! command -v dokku >/dev/null; then
 fi
 
 # 2. Install Plugins
-# PostgreSQL
-if ! dokku plugin:list | grep -q "postgres"; then
+# PostgreSQL (grep without -q prevents broken pipe when dokku outputs long lists)
+if ! dokku plugin:list | grep "postgres" >/dev/null 2>&1; then
     echo "Installing dokku-postgres..."
     dokku plugin:install https://github.com/dokku/dokku-postgres.git || echo "Plugin already installed."
 fi
@@ -76,8 +76,8 @@ if [ "$CREATE_DEV_ENV" = "true" ]; then
     
     # Configure Port Routing for Dev (instead of domains)
     echo "Configuring port routing for $DEV_APP (Port 8080)..."
-    dokku proxy:ports-add "$DEV_APP" http:8080:5000 || true
-    dokku proxy:ports-remove "$DEV_APP" http:80:5000 || true
+    dokku ports:add "$DEV_APP" http:8080:5000 || true
+    dokku ports:remove "$DEV_APP" http:80:5000 || true
 
     if ! dokku postgres:list | grep -q "^$DEV_DB$"; then
         echo "Creating dev database $DEV_DB..."
