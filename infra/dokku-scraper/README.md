@@ -26,7 +26,7 @@ Run from this machine (uses `pve.tail` SSH alias):
 ### 2. Setup Dokku & Tailscale
 Once the LXC is up and reachable, run the setup script. This installs Dokku, PostgreSQL, and Tailscale (userspace mode).
 ```bash
-./setup-dokku.sh
+CREATE_DEV_ENV="true" ./setup-dokku.sh
 ```
 
 **CRITICAL: Authenticate Tailscale**
@@ -36,9 +36,7 @@ ssh scraper.tail.root
 tailscale up
 ```
 
-The script automatically enables **Tailscale Funnel** to expose your apps to the internet with native SSL:
-*   **Production:** Port 443 (routes to Nginx 80)
-*   **Development:** Port 8443 (routes to Dev App 8080)
+The script automatically enables **Tailscale Funnel** to expose your apps to the internet securely. *Note: This Funnel state is saved by the Tailscale daemon and will automatically persist across server reboots. You do not need a custom startup script.*
 
 ### 3. Deploy the App
 Add the Dokku remotes to your application repository:
@@ -55,14 +53,18 @@ git remote add dokku-dev dokku@scraper.tail:sauspiel-scraper-dev
 git push dokku-dev develop:main
 ```
 
-## Public Access
+## Architecture & Routing
 
-Once deployed, your apps are available securely over the internet via Tailscale Funnel:
+Because we are using the native Tailscale domain (`*.ts.net`) for automatic SSL, we cannot rely solely on domain names to separate the two environments. Instead, we use a hybrid approach combining virtual hosts and port mapping:
 
-| Environment | URL |
-| :--- | :--- |
-| **Production** | `https://scraper.tailnet-name.ts.net/` |
-| **Development** | `https://scraper.tailnet-name.ts.net:8443/` |
+| Environment | Internal Dokku Routing | Tailscale Funnel Mapping | Public URL |
+| :--- | :--- | :--- | :--- |
+| **Production** | Nginx virtual host (`scraper...ts.net`) on port **80** | Public **443** -> Local `127.0.0.1:80` | `https://scraper.tailnet.ts.net/` |
+| **Development** | Explicit Dokku port binding on port **8080** | Public **8443** -> Local `127.0.0.1:8080` | `https://scraper.tailnet.ts.net:8443/` |
+
+**How Dokku knows where to route:**
+1. **Production:** When traffic hits Funnel on 443, it is forwarded to local port 80. Dokku's Nginx listens on port 80 and checks the `Host` header. Since we set the app's domain to `scraper.tail...ts.net`, Nginx matches it and routes it to the production container.
+2. **Development:** We explicitly bypassed Nginx virtual hosts for the dev app by running `dokku ports:add sauspiel-scraper-dev http:8080:5000`. This directly binds the dev container to host port 8080. When traffic hits Funnel on 8443, it forwards to 8080, hitting the dev container directly.
 
 ## GitHub Actions Deployment
 
