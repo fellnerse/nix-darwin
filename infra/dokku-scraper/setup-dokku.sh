@@ -45,15 +45,15 @@ fi
 
 # 2. Install Plugins
 # PostgreSQL
-if ! dokku plugin:report postgres --plugin-enabled >/dev/null 2>&1; then
+if ! dokku plugin:list | grep -q "postgres"; then
     echo "Installing dokku-postgres..."
     dokku plugin:install https://github.com/dokku/dokku-postgres.git || echo "Plugin already installed."
 fi
 
 # Let's Encrypt
-if ! dokku plugin:report letsencrypt --plugin-enabled >/dev/null 2>&1; then
+if ! dokku plugin:list | grep -q "letsencrypt"; then
     echo "Installing dokku-letsencrypt..."
-    dokku plugin:install https://github.com/dokku/dokku-letsencrypt.git
+    dokku plugin:install https://github.com/dokku/dokku-letsencrypt.git || echo "Plugin already installed."
     dokku letsencrypt:set --global email "$LE_EMAIL"
 fi
 
@@ -101,7 +101,7 @@ fi
 # 5. Tailscale Setup (Userspace mode for LXC)
 if ! command -v tailscale >/dev/null; then
     echo "Installing Tailscale..."
-    curl -fsSL https://tailscale.com/install.sh | h
+    curl -fsSL https://tailscale.com/install.sh | sh
 
     # Configure systemd override for userspace networking
     mkdir -p /etc/systemd/system/tailscaled.service.d
