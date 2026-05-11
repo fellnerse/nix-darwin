@@ -64,6 +64,7 @@ if ! dokku apps:list | grep -q "^$APP_NAME$"; then
 fi
 
 # Set Production Domain
+echo "Setting domain for $APP_NAME to $PROD_DOMAIN..."
 dokku domains:set "$APP_NAME" "$PROD_DOMAIN"
 
 if ! dokku postgres:list | grep -q "^$APP_NAME-db$"; then
@@ -78,28 +79,29 @@ fi
 if [ "$CREATE_DEV_ENV" = "true" ]; then
     DEV_APP="${APP_NAME}-dev"
     DEV_DB="${APP_NAME}-db-dev"
-
-    if ! dokku apps:list | grep -q "^\$DEV_APP$"; then
-        echo "Creating dev app \$DEV_APP..."
-        dokku apps:create \$DEV_APP
+    
+    if ! dokku apps:list | grep -q "^$DEV_APP$"; then
+        echo "Creating dev app $DEV_APP..."
+        dokku apps:create "$DEV_APP"
     fi
-
+    
     # Set Dev Domain
-    dokku domains:set "\$DEV_APP" "$DEV_DOMAIN"
+    echo "Setting domain for $DEV_APP to $DEV_DOMAIN..."
+    dokku domains:set "$DEV_APP" "$DEV_DOMAIN"
 
-    if ! dokku postgres:list | grep -q "^\$DEV_DB$"; then
-        echo "Creating dev database \$DEV_DB..."
-        dokku postgres:create \$DEV_DB
-        dokku postgres:link \$DEV_DB \$DEV_APP
+    if ! dokku postgres:list | grep -q "^$DEV_DB$"; then
+        echo "Creating dev database $DEV_DB..."
+        dokku postgres:create "$DEV_DB"
+        dokku postgres:link "$DEV_DB" "$DEV_APP"
         echo "Exposing dev database on port 5433..."
-        dokku postgres:expose \$DEV_DB 5433
+        dokku postgres:expose "$DEV_DB" 5433
     fi
 fi
 
 # 5. Tailscale Setup (Userspace mode for LXC)
 if ! command -v tailscale >/dev/null; then
     echo "Installing Tailscale..."
-    curl -fsSL https://tailscale.com/install.sh | sh
+    curl -fsSL https://tailscale.com/install.sh | h
 
     # Configure systemd override for userspace networking
     mkdir -p /etc/systemd/system/tailscaled.service.d
@@ -110,7 +112,7 @@ ExecStart=/usr/sbin/tailscaled --state=/var/lib/tailscale/tailscaled.state --soc
 OVERRIDE
     systemctl daemon-reload
     systemctl restart tailscaled
-
+    
     echo "Tailscale installed. You will need to run 'tailscale up' manually to authenticate."
 fi
 
