@@ -85,7 +85,10 @@ Both databases are exposed via Tailscale for remote access from your dev machine
 
 | Environment | Host | Port | Database |
 | :--- | :--- | :--- | :--- |
-| **Production** | `scraper.tail` | `5432` | `sauspiel_scraper_db` |
-| **Development** | `scraper.tail` | `5433` | `sauspiel_scraper_db_dev` |
+| **Production** | `scraper.tailnet-name.ts.net` | `5432` | `sauspiel_scraper_db` |
+| **Development** | `scraper.tailnet-name.ts.net` | `5433` | `sauspiel_scraper_db_dev` |
 
 Note: Connection strings start with `postgresql://`.
+
+### Database Proxy Workaround
+The setup script bypasses the standard `dokku postgres:expose` command. The official `dokku/ambassador:0.8.2` image used for port forwarding is incompatible with the Docker engine running on Debian 12 and crashes in a loop. Instead, the script provisions custom `alpine/socat` proxy containers (`sauspiel-scraper-db-proxy` and `sauspiel-scraper-db-dev-proxy`) to securely and stably bridge the internal database ports to the host interface.

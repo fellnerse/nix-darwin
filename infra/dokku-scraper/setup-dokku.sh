@@ -60,8 +60,10 @@ if ! dokku postgres:list | grep -q "^$APP_NAME-db$"; then
     echo "Creating database $APP_NAME-db..."
     dokku postgres:create "$APP_NAME-db"
     dokku postgres:link "$APP_NAME-db" "$APP_NAME"
-    echo "Exposing production database on port 5432..."
-    dokku postgres:expose "$APP_NAME-db" 5432
+    echo "Exposing production database on port 5432 (using socat workaround)..."
+    dokku postgres:unexpose "$APP_NAME-db" || true
+    docker rm -f "${APP_NAME}-db-proxy" || true
+    docker run -d --name "${APP_NAME}-db-proxy" --restart always -p 5432:5432 --link "dokku.postgres.${APP_NAME}-db:db" alpine/socat tcp-listen:5432,fork,reuseaddr tcp-connect:db:5432
 fi
 
 # 4. Create Development App and Database (Optional)
@@ -83,8 +85,10 @@ if [ "$CREATE_DEV_ENV" = "true" ]; then
         echo "Creating dev database $DEV_DB..."
         dokku postgres:create "$DEV_DB"
         dokku postgres:link "$DEV_DB" "$DEV_APP"
-        echo "Exposing dev database on port 5433..."
-        dokku postgres:expose "$DEV_DB" 5433
+        echo "Exposing dev database on port 5433 (using socat workaround)..."
+        dokku postgres:unexpose "$DEV_DB" || true
+        docker rm -f "${DEV_DB}-proxy" || true
+        docker run -d --name "${DEV_DB}-proxy" --restart always -p 5433:5432 --link "dokku.postgres.${DEV_DB}:db" alpine/socat tcp-listen:5432,fork,reuseaddr tcp-connect:db:5432
     fi
 fi
 
