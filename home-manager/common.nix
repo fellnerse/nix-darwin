@@ -41,6 +41,15 @@ let
         };
       };
     };
+    env = {
+      ANTHROPIC_BASE_URL = "https://llm-proxy.edgez.live/";
+      ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-8";
+      ANTHROPIC_DEFAULT_SONNET_MODEL = "claude-sonnet-4-6";
+      ANTHROPIC_DEFAULT_HAIKU_MODEL = "claude-haiku-4-5";
+      ANTHROPIC_MODEL = "haiku";
+      CLAUDE_CODE_SKIP_BEDROCK_AUTH = "true";
+      CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS = "1";
+    };
   };
 in
 {
@@ -268,7 +277,7 @@ in
           language_servers = [
             "ty"
             "ruff"
-            "pytest-language-server"
+            "pytest-language-server" # I think I need that one, so the fixtures of pytest are resolved correctly
             "!basedpyright"
             "!pyright"
             "..."
@@ -299,7 +308,7 @@ in
                 max_tokens = 2000000;
               }
               {
-                name = "claude-opus-4-7";
+                name = "claude-opus-4-8";
                 display_name = "NL - Claude - opus";
                 max_tokens = 2000000;
               }
@@ -541,8 +550,8 @@ in
                 output = 15;
               };
             };
-            claude-opus-4-6 = {
-              name = "Claude Opus 4.6";
+            claude-opus-4-8 = {
+              name = "Claude Opus 4.8";
               limit = {
                 context = 200000;
                 output = 64000;
