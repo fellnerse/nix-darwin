@@ -46,7 +46,7 @@ let
       ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-8";
       ANTHROPIC_DEFAULT_SONNET_MODEL = "claude-sonnet-4-6";
       ANTHROPIC_DEFAULT_HAIKU_MODEL = "claude-haiku-4-5";
-      ANTHROPIC_MODEL = "haiku";
+      ANTHROPIC_MODEL = "sonnet";
       CLAUDE_CODE_SKIP_BEDROCK_AUTH = "true";
       CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS = "1";
     };
@@ -342,7 +342,7 @@ in
       agent = {
         default_model = {
           provider = "NL-Codepilot";
-          model = "claude-latest";
+          model = "claude-sonnet-4-6";
         };
         model_parameters = [ ];
       };
