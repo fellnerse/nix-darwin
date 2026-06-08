@@ -7,6 +7,8 @@
     autoUpdate = true;
     upgrade = true;
     cleanup = "uninstall";
+    # brew bundle install --cleanup now requires --force in newer Homebrew versions
+    extraFlags = [ "--force" ];
   };
   brews = [
     "baobab"
@@ -35,5 +37,9 @@
   ];
   masApps = {
     "Bitwarden" = 1352778147;
+    "Slack" = 803453959;
+    "WhatsApp" = 310633997;
+    "Windows App" = 1295203466;
+    "WireGuard" = 1451685025;
   };
 }
