@@ -14,7 +14,6 @@
     "baobab"
     "docker-credential-helper"
     "glib"
-    "mas"
     "mole"
   ];
   casks = [
@@ -35,11 +34,14 @@
     "sublime-text"
     "tailscale-app"
   ];
-  masApps = {
-    "Bitwarden" = 1352778147;
-    "Slack" = 803453959;
-    "WhatsApp" = 310633997;
-    "Windows App" = 1295203466;
-    "WireGuard" = 1451685025;
-  };
+  # NOTE: Do NOT re-add `masApps = { ... }` / the `mas` brew here.
+  # Mac App Store apps (Bitwarden, WhatsApp, Windows App, WireGuard, Slack, ...)
+  # are intentionally managed manually via the App Store. `mas` integration kept
+  # breaking `darwin-rebuild switch` on a regular basis:
+  #   - "Failed to change ownership ... Operation not permitted" on
+  #     root-owned/protected apps (Microsoft Office, AdGuard, etc.)
+  #   - mas-installed apps clashing with the same app as a cask (Slack), leaving
+  #     a root-owned /Applications/*.app that blocked cask upgrades
+  #   - flaky "Failed to find pkg to update" errors that needed manual retries
+  # The manual App Store workflow is boring but reliable. Leave it that way.
 }
