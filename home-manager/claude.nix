@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   # Written to ~/.claude.json — replaces mcpServers entirely (declarative source of truth)
   claudeMcpServers = {
@@ -32,6 +37,7 @@ let
   claudeStaticSettings = {
     enabledPlugins = {
       "compound-engineering@compound-engineering-plugin" = true;
+      "statusline@ai-tooling-marketplace" = true;
     };
     extraKnownMarketplaces = {
       "compound-engineering-plugin" = {
@@ -40,11 +46,21 @@ let
           repo = "EveryInc/compound-engineering-plugin";
         };
       };
+      "ai-tooling-marketplace" = {
+        source = {
+          source = "git";
+          url = "git@gitlab.netlight.com:tech-open/ai-tooling/claude-skills.git";
+        };
+      };
+    };
+    statusLine = {
+      type = "command";
+      command = "${config.home.homeDirectory}/.claude/plugins/cache/ai-tooling-marketplace/statusline/1.0.0/hooks/statusline.sh";
     };
     env = {
       ANTHROPIC_BASE_URL = "https://llm-proxy.edgez.live/";
       ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-8";
-      ANTHROPIC_DEFAULT_SONNET_MODEL = "claude-sonnet-4-6";
+      ANTHROPIC_DEFAULT_SONNET_MODEL = "claude-sonnet-5";
       ANTHROPIC_DEFAULT_HAIKU_MODEL = "claude-haiku-4-5"; # 4.6 not available as of 18.6.26
       ANTHROPIC_MODEL = "sonnet";
       CLAUDE_CODE_SKIP_BEDROCK_AUTH = "true";
