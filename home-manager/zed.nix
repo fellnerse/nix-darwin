@@ -1,8 +1,13 @@
-{ pkgs, ... }:
+{ ... }:
 {
   programs.zed-editor = {
     enable = true;
-    package = pkgs.unstable.zed-editor;
+    # Installed via Homebrew cask (hosts/mbp/homebrew.nix) instead of nixpkgs:
+    # zed-editor on aarch64-darwin is a large Rust build that Hydra frequently
+    # fails/cancels, so nix flake update regularly lands on an uncached
+    # revision and forces a slow local build. home-manager still manages
+    # settings/keymaps/tasks/extensions below regardless of package = null.
+    package = null;
     extensions = [
       "nix"
       "fish"

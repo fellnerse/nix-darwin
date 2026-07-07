@@ -33,6 +33,8 @@
     "steam"
     "sublime-text"
     "tailscale-app"
+    "music-decoy"
+    "zed"
   ];
   # NOTE: Do NOT re-add `masApps = { ... }` / the `mas` brew here.
   # Mac App Store apps (Bitwarden, WhatsApp, Windows App, WireGuard, Slack, ...)
