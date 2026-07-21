@@ -64,7 +64,8 @@ let
       ANTHROPIC_DEFAULT_HAIKU_MODEL = "claude-haiku-4-5"; # 4.6 not available as of 18.6.26
       ANTHROPIC_MODEL = "sonnet";
       CLAUDE_CODE_SKIP_BEDROCK_AUTH = "true";
-      CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS = "1";
+      CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS = "false";
+      ENABLE_TOOL_SEARCH = "true";
     };
   };
 in
