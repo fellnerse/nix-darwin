@@ -5,6 +5,7 @@
     ./zed.nix
     ./claude.nix
     ./opencode.nix
+    ./omp.nix
   ];
 
   # Common packages

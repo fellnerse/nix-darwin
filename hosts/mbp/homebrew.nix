@@ -12,6 +12,7 @@
   };
   brews = [
     "baobab"
+    "can1357/tap/omp" # oh-my-pi coding agent CLI, not packaged in nixpkgs
     "docker-credential-helper"
     "glib"
     "mole"
