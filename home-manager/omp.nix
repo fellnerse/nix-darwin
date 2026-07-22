@@ -5,63 +5,6 @@ let
 
   # Same litellm proxy as claude.nix/opencode.nix/zed.nix, auth via NL_CODEPILOT_API_KEY
   # (set externally by the token-acquirement project, not managed here)
-  netlightModels = [
-    {
-      id = "claude-latest";
-      name = "Claude Latest";
-      contextWindow = 200000;
-      maxTokens = 64000;
-    }
-    {
-      id = "claude-opus-4-8";
-      name = "Claude Opus 4.8";
-      contextWindow = 200000;
-      maxTokens = 64000;
-    }
-    {
-      id = "claude-sonnet-4-6";
-      name = "Claude Sonnet 4.6";
-      contextWindow = 200000;
-      maxTokens = 64000;
-    }
-    {
-      id = "claude-haiku-4-5";
-      name = "Claude Haiku 4.5";
-      contextWindow = 200000;
-      maxTokens = 64000;
-    }
-    {
-      id = "gpt-5";
-      name = "GPT-5";
-      contextWindow = 400000;
-      maxTokens = 128000;
-    }
-    {
-      id = "gpt-5.1";
-      name = "GPT-5.1";
-      contextWindow = 400000;
-      maxTokens = 128000;
-    }
-    {
-      id = "gpt-5.6-luna";
-      name = "GPT-5.6 Luna";
-      contextWindow = 1100000;
-      maxTokens = 128000;
-    }
-    {
-      id = "gpt-5.6-terra";
-      name = "GPT-5.6 Terra";
-      contextWindow = 1100000;
-      maxTokens = 128000;
-    }
-    {
-      id = "gpt-5.6-sol";
-      name = "GPT-5.6 Sol";
-      contextWindow = 1100000;
-      maxTokens = 128000;
-    }
-  ];
-
   modelsConfig = {
     providers = {
       netlight = {
@@ -70,7 +13,25 @@ let
         apiKey = "ANTHROPIC_AUTH_TOKEN";
         authHeader = true;
         auth = "apiKey";
-        models = netlightModels;
+        discovery = {
+          type = "litellm";
+        };
+      };
+      # Claude models get their own provider using litellm's native anthropic-messages
+      # endpoint (same one claude.nix points ANTHROPIC_BASE_URL at) instead of
+      # openai-completions: going through the OpenAI-compat shim mangles thinking/reasoning
+      # blocks for Claude models. anthropic-messages needs compat.disableStrictTools since
+      # omp always sends tool.strict, which the Anthropic tool schema rejects
+      # (https://github.com/can1357/oh-my-pi/issues/826).
+      "netlight-anthropic" = {
+        baseUrl = "https://llm-proxy.edgez.live";
+        api = "anthropic-messages";
+        apiKey = "ANTHROPIC_AUTH_TOKEN";
+        authHeader = true;
+        auth = "apiKey";
+        compat = {
+          disableStrictTools = true;
+        };
         discovery = {
           type = "litellm";
         };
