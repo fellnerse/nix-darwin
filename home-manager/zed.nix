@@ -141,6 +141,15 @@
         tabular-data-preview = "on";
         notebooks = "on";
       };
+      agent_servers = {
+        omp = {
+          type = "custom";
+          command = "omp";
+          args = [
+            "acp"
+          ];
+        };
+      };
     };
 
     userKeymaps = [
