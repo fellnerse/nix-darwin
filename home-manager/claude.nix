@@ -5,6 +5,9 @@
   ...
 }:
 let
+  configMerge = import ../lib/config-merge.nix { inherit lib pkgs; };
+  jsonFormat = pkgs.formats.json { };
+
   # Written to ~/.claude.json — replaces mcpServers entirely (declarative source of truth)
   claudeMcpServers = {
     atlassian = {
@@ -87,19 +90,18 @@ in
     Always use Context7 MCP when I need library/API documentation, code generation, setup or configuration steps without me having to explicitly ask.
   '';
 
-  home.activation.claudeMcpServers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    f="$HOME/.claude.json"
-    [ -f "$f" ] || echo '{}' > "$f"
-    tmp=$(${pkgs.jq}/bin/jq --argjson s '${builtins.toJSON claudeMcpServers}' \
-      '.mcpServers = $s' "$f")
-    echo "$tmp" > "$f"
-  '';
+  home.activation.claudeMcpServers = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+    configMerge.setPath {
+      path = "${config.home.homeDirectory}/.claude.json";
+      jqPath = ".mcpServers";
+      static = jsonFormat.generate "claude-mcp-servers.json" claudeMcpServers;
+    }
+  );
 
-  home.activation.claudeStaticSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    f="$HOME/.claude/settings.json"
-    [ -f "$f" ] || echo '{}' > "$f"
-    tmp=$(${pkgs.jq}/bin/jq --argjson s '${builtins.toJSON claudeStaticSettings}' \
-      '. * $s' "$f")
-    echo "$tmp" > "$f"
-  '';
+  home.activation.claudeStaticSettings = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+    configMerge.mergeFile {
+      path = "${config.home.homeDirectory}/.claude/settings.json";
+      static = jsonFormat.generate "claude-static-settings.json" claudeStaticSettings;
+    }
+  );
 }

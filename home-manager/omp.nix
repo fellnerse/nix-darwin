@@ -1,7 +1,15 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   yamlFormat = pkgs.formats.yaml { };
+  jsonFormat = pkgs.formats.json { };
   # the package itself is installed via brew, there is no nix package, brew is the straight forward easiest solution
+
+  configMerge = import ../lib/config-merge.nix { inherit lib pkgs; };
 
   # Same litellm proxy as claude.nix/opencode.nix/zed.nix, auth via NL_CODEPILOT_API_KEY
   # (set externally by the token-acquirement project, not managed here)
@@ -20,7 +28,7 @@ let
       # Claude models get their own provider using litellm's native anthropic-messages
       # endpoint (same one claude.nix points ANTHROPIC_BASE_URL at) instead of
       # openai-completions: going through the OpenAI-compat shim mangles thinking/reasoning
-      # blocks for Claude models. anthropic-messages needs compat.disableStrictTools since
+      # blocks for Claude models. anthropic-messages needs disableStrictTools since
       # omp always sends tool.strict, which the Anthropic tool schema rejects
       # (https://github.com/can1357/oh-my-pi/issues/826).
       "netlight-anthropic" = {
@@ -29,17 +37,99 @@ let
         apiKey = "ANTHROPIC_AUTH_TOKEN";
         authHeader = true;
         auth = "apiKey";
-        compat = {
-          disableStrictTools = true;
-        };
+        # top-level field, NOT nested under compat — compat.disableStrictTools
+        # is not a recognized key (ArkType keeps unknown keys silently, so this
+        # nested form validated fine but had no effect).
+        disableStrictTools = true;
         discovery = {
           type = "litellm";
         };
       };
     };
   };
+
+  # ~/.omp/agent/config.yml — persistent settings normally written by the
+  # `/settings` panel or `omp config set` (docs/settings.md).
+  configConfig = {
+    setupVersion = 1;
+    modelRoles = {
+      smol = "netlight-anthropic/claude-haiku-4-5";
+      default = "netlight-anthropic/claude-sonnet-5:high";
+      slow = "netlight-anthropic/claude-opus-4-8";
+    };
+    autolearn = {
+      enabled = true;
+      autoContinue = true;
+    };
+    providers = {
+      webSearchOrder = [
+        "brave"
+        "perplexity"
+        "gemini"
+        "anthropic"
+        "codex"
+        "xai"
+        "zai"
+        "exa"
+        "tinyfish"
+        "jina"
+        "kagi"
+        "tavily"
+        "firecrawl"
+        "kimi"
+        "parallel"
+        "synthetic"
+        "searxng"
+        "startpage"
+        "duckduckgo"
+        "ecosia"
+        "google"
+        "mojeek"
+        "public"
+      ];
+    };
+    statusLine = {
+      separator = "powerline";
+    };
+    terminal = {
+      showProgress = true;
+    };
+    tui = {
+      tight = true;
+    };
+    display = {
+      showTokenUsage = true;
+    };
+    memory = {
+      backend = "mnemopi";
+    };
+  };
+
+  # ~/.omp/agent/mcp.json — MCP server registry (docs/mcp-config.md).
+  mcpConfig = {
+    "$schema" =
+      "https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json";
+    mcpServers = { };
+    disabledServers = [ "serena" ];
+  };
 in
 {
   # Package installed via Homebrew tap (hosts/mbp/homebrew.nix) - not in nixpkgs
   home.file.".omp/agent/models.yml".source = yamlFormat.generate "models.yml" modelsConfig;
+
+  home.activation.ompConfigYml = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+    configMerge.mergeFile {
+      path = "${config.home.homeDirectory}/.omp/agent/config.yml";
+      static = jsonFormat.generate "omp-config.yml" configConfig;
+      format = "yaml";
+    }
+  );
+
+  home.activation.ompMcpJson = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+    configMerge.mergeFile {
+      path = "${config.home.homeDirectory}/.omp/agent/mcp.json";
+      static = jsonFormat.generate "omp-mcp.json" mcpConfig;
+      format = "json";
+    }
+  );
 }
