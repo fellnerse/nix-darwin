@@ -48,6 +48,13 @@ let
     };
   };
 
+  # ~/.omp/agent/RULES.md — global rules injected into every session
+  # (read-only load at startup; omp's UI never writes back to it, unlike
+  # config.yml/mcp.json, so a plain overwrite is safe).
+  rulesContent = ''
+    Never run `find` (especially unscoped `find /`) via bash to locate a file. Use the `glob` tool instead, anchored at a known root (e.g. `.venv/lib/*/site-packages/<pkg>/**`, `node_modules/<pkg>/**`, or the repo root). This has been violated before - treat it as a hard rule, not a style preference.
+  '';
+
   # ~/.omp/agent/config.yml — persistent settings normally written by the
   # `/settings` panel or `omp config set` (docs/settings.md).
   configConfig = {
@@ -116,6 +123,7 @@ in
 {
   # Package installed via Homebrew tap (hosts/mbp/homebrew.nix) - not in nixpkgs
   home.file.".omp/agent/models.yml".source = yamlFormat.generate "models.yml" modelsConfig;
+  home.file.".omp/agent/RULES.md".text = rulesContent;
 
   home.activation.ompConfigYml = lib.hm.dag.entryAfter [ "linkGeneration" ] (
     configMerge.mergeFile {
