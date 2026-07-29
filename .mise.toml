@@ -12,7 +12,14 @@ run = "nix flake update home-manager"
 
 [tasks.system]
 description = "Build and switch system config (requires sudo)"
-run = "sudo darwin-rebuild switch --flake .#Sebastians-MacBook-Pro-2"
+run = """
+# Homebrew's tap-trust store (~/.homebrew/trust.json for user 'private') has been observed
+# to get wiped by `brew bundle --cleanup --force` during activation, causing
+# 'Refusing to load formula can1357/tap/omp from untrusted tap' on darwin-rebuild switch.
+# Re-trust unconditionally (idempotent, cheap) before every switch as a guard.
+sudo -u private env HOME=/Users/private HOMEBREW_CACHE=/Users/private/Library/Caches/Homebrew brew trust can1357/tap
+sudo darwin-rebuild switch --flake .#Sebastians-MacBook-Pro-2
+"""
 
 [tasks.check]
 description = "Validate configuration without building"
