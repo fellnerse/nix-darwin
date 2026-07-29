@@ -24,6 +24,21 @@ let
         discovery = {
           type = "litellm";
         };
+        # gpt-5.6-luna (azure/gpt-5.6-luna behind litellm, mode: chat) 500s with
+        # "'async for' requires an object with __aiter__ method, got ModelResponse"
+        # whenever a request carries both `tools` and `reasoning_effort` (confirmed
+        # by replaying the exact request against llm-proxy.edgez.live/v1/chat/completions:
+        # tools alone -> 200, reasoning_effort alone -> 200, both together -> 500 for
+        # every effort value including "none"). omp always attaches reasoning_effort
+        # once a model reports supports_reasoning, so every agentic (tool-using) turn
+        # hit this. Disabling `reasoning` here stops omp from ever sending
+        # reasoning_effort for this one model; this is a client-side workaround for a
+        # litellm/Azure integration bug on the proxy side, report upstream too.
+        modelOverrides = {
+          "gpt-5.6-luna" = {
+            reasoning = false;
+          };
+        };
       };
       # Claude models get their own provider using litellm's native anthropic-messages
       # endpoint (same one claude.nix points ANTHROPIC_BASE_URL at) instead of
