@@ -11,8 +11,11 @@
       gss = "git status -s";
       lz = "lazygit";
       zl = "zellij";
-      # Homebrew is owned by 'private' user (see homebrew.nix), run as that user to avoid permission issues
-      brew = "sudo -u private env HOMEBREW_CACHE=/Users/private/Library/Caches/Homebrew brew";
+      # Homebrew is owned by 'private' user (see homebrew.nix); HOME=/Users/private is required
+      # because plain `sudo -u private` does NOT reset $HOME, so without it brew's trust store
+      # (~/.homebrew/trust.json) resolves to sefe's home and "Refusing to write insecure trust
+      # store" / "untrusted tap" errors follow. See skill sefe-nix-darwin-private-brew-recovery.
+      brew = "sudo -u private env HOME=/Users/private HOMEBREW_CACHE=/Users/private/Library/Caches/Homebrew brew";
     };
 
     shellInit = ''
