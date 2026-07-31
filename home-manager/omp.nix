@@ -31,12 +31,13 @@ let
         # tools alone -> 200, reasoning_effort alone -> 200, both together -> 500 for
         # every effort value including "none"). omp always attaches reasoning_effort
         # once a model reports supports_reasoning, so every agentic (tool-using) turn
-        # hit this. Disabling `reasoning` here stops omp from ever sending
-        # reasoning_effort for this one model; this is a client-side workaround for a
-        # litellm/Azure integration bug on the proxy side, report upstream too.
+        # hit this. This is an Azure-deployment-specific litellm integration bug (other
+        # models like terra, deployed elsewhere, don't show it) — client-side
+        # workaround: disable tool support for this one model instead of reasoning, so
+        # omp never combines `tools` + `reasoning_effort` for it. Report upstream too.
         modelOverrides = {
           "gpt-5.6-luna" = {
-            reasoning = false;
+            supportsTools = false;
           };
         };
       };
@@ -76,8 +77,8 @@ let
     setupVersion = 1;
     modelRoles = {
       smol = "netlight-anthropic/claude-haiku-4-5";
-      default = "netlight-anthropic/claude-sonnet-5:high";
-      slow = "netlight-anthropic/claude-opus-4-8";
+      default = "netlight-anthropic/claude-sonnet-5:low";
+      slow = "netlight-anthropic/claude-opus-5";
     };
     autolearn = {
       enabled = true;
@@ -86,28 +87,6 @@ let
     providers = {
       webSearchOrder = [
         "brave"
-        "perplexity"
-        "gemini"
-        "anthropic"
-        "codex"
-        "xai"
-        "zai"
-        "exa"
-        "tinyfish"
-        "jina"
-        "kagi"
-        "tavily"
-        "firecrawl"
-        "kimi"
-        "parallel"
-        "synthetic"
-        "searxng"
-        "startpage"
-        "duckduckgo"
-        "ecosia"
-        "google"
-        "mojeek"
-        "public"
       ];
     };
     statusLine = {
@@ -125,6 +104,7 @@ let
     memory = {
       backend = "mnemopi";
     };
+    symbolPreset = "nerd";
   };
 
   # ~/.omp/agent/mcp.json — MCP server registry (docs/mcp-config.md).

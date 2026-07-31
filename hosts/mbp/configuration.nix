@@ -103,6 +103,18 @@
         wvous-bl-corner = 0; # Bottom-left
         wvous-br-corner = 0; # Bottom-right
       };
+      "com.microsoft.autoupdate2" = {
+        # UI checkbox only toggles AutomaticDownload <-> AutomaticCheck; it never
+        # stops the background check itself (LaunchAgent still wakes every 2h).
+        # "Manual" is the only value that actually silences it; UI can't set it.
+        HowToCheck = "Manual";
+        # HowToCheck=Manual alone still lets MAU launch itself (checking for its
+        # own update) whenever Teams/Outlook/Word start - and those are login
+        # items, so it reappears on every restart/login regardless of HowToCheck.
+        # This is the actual trigger; default is true. Confirmed via
+        # https://mosen.github.io/profiledocs/custom/microsoft-autoupdate2.html
+        StartDaemonOnAppLaunch = false;
+      };
       "NSGlobalDomain" = {
         "ApplePressAndHoldEnabled" = true;
         "InitialKeyRepeat" = 15;

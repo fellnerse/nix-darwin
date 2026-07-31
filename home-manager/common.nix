@@ -138,17 +138,6 @@
 
   programs.lazygit.enable = true;
 
-  programs.neovim = {
-    enable = true;
-    extraPackages = with pkgs; [
-      lua-language-server
-      stylua
-      ripgrep
-    ];
-    plugins = with pkgs.vimPlugins; [ lazy-nvim ];
-    extraLuaConfig = ''require("lazy").setup({ spec = { { "LazyVim/LazyVim", import = "lazyvim.plugins" } }, })'';
-  };
-
   programs.firefox = {
     enable = true;
   };
