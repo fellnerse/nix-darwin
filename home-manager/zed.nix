@@ -145,6 +145,7 @@
           type = "custom";
           command = "omp";
           args = [
+            "--auto-approve"
             "acp"
           ];
         };
