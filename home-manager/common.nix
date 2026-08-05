@@ -45,34 +45,34 @@
     enable = true;
     package = pkgs.openssh;
     enableDefaultConfig = false;
-    matchBlocks = {
-      "pve.local" = {
-        user = "root";
+    settings = {
+      "Host pve.local" = {
+        User = "root";
       };
-      "homeassistant.local" = {
-        user = "root";
+      "Host homeassistant.local" = {
+        User = "root";
       };
       # Tailscale hostname for HA - works from anywhere
-      "homeassistant.tail" = {
-        hostname = "homeassistant.tail401ae4.ts.net";
-        user = "root";
+      "Host homeassistant.tail" = {
+        HostName = "homeassistant.tail401ae4.ts.net";
+        User = "root";
       };
       # PVE via Tailscale -> HA jump host - works from anywhere
-      "pve.tail" = {
-        hostname = "pve.local";
-        user = "root";
-        proxyJump = "homeassistant.tail";
+      "Host pve.tail" = {
+        HostName = "pve.local";
+        User = "root";
+        ProxyJump = "homeassistant.tail";
       };
       # OpenClaw LXC container on PVE - reachable via HA jump host
-      "openclaw.tail" = {
-        hostname = "192.168.178.61";
-        user = "sefe";
-        proxyJump = "homeassistant.tail";
+      "Host openclaw.tail" = {
+        HostName = "192.168.178.61";
+        User = "sefe";
+        ProxyJump = "homeassistant.tail";
       };
-      "openclaw.tail.root" = {
-        hostname = "192.168.178.61";
-        user = "root";
-        proxyJump = "homeassistant.tail";
+      "Host openclaw.tail.root" = {
+        HostName = "192.168.178.61";
+        User = "root";
+        ProxyJump = "homeassistant.tail";
       };
     };
   };
