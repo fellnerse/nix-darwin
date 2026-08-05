@@ -12,7 +12,6 @@
       "nix"
       "fish"
       "toml"
-      "opencode"
       "pytest-language-server"
     ];
 

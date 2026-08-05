@@ -54,6 +54,3 @@ The memory exhaustion was caused by excessive Chromium renderer processes genera
 - **Resource Limits Awareness**: CT 101 has a strict 1.5GiB RAM ceiling; monitor usage when performing heavy web-based tasks.
 - **Agent Tuning**: The `agents.defaults.timeoutSeconds` in `openclaw.json` was increased to 900s to accommodate slower browser startup under load.
 
-## Related Issues
-- `.serena/memories/proxmox-homeassistant-maintenance.md` (infrastructure details)
-- `.serena/memories/openclaw-telegram-config.md` (channel configuration)

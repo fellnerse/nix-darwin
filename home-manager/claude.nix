@@ -23,18 +23,6 @@ let
       ];
       env = { };
     };
-    serena = {
-      type = "stdio";
-      command = "serena";
-      args = [
-        "start-mcp-server"
-        "--context=claude-code"
-        "--project-from-cwd"
-        "--open-web-dashboard"
-        "false"
-      ];
-      env = { };
-    };
   };
   # Written to ~/.claude/settings.json — merged (Claude Code owns the rest)
   claudeStaticSettings = {
@@ -75,7 +63,6 @@ in
 {
   home.packages = with pkgs; [
     unstable.claude-code
-    serena
     nodejs_24 # needed for context7, as it runs with npx
   ];
 

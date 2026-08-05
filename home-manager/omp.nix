@@ -11,7 +11,7 @@ let
 
   configMerge = import ../lib/config-merge.nix { inherit lib pkgs; };
 
-  # Same litellm proxy as claude.nix/opencode.nix/zed.nix, auth via NL_CODEPILOT_API_KEY
+  # Same litellm proxy as claude.nix/zed.nix, auth via NL_CODEPILOT_API_KEY
   # (set externally by the token-acquirement project, not managed here)
   modelsConfig = {
     providers = {
@@ -112,7 +112,6 @@ let
     "$schema" =
       "https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json";
     mcpServers = { };
-    disabledServers = [ "serena" ];
   };
 in
 {
