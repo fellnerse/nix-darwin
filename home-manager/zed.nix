@@ -124,18 +124,6 @@
         };
         model_parameters = [ ];
       };
-      # and for some reason the edit predictions in the editor need additional settings
-      # auth works via ZED_OPEN_AI_COMPATIBLE_EDIT_PREDICTION_API_KEY
-      # Not sure why, but it seems not working atm. probably the auth header is not correctly set: https://zed.dev/docs/ai/edit-prediction#self-hosted-openai-compatible-servers
-      edit_predictions = {
-        provider = "open_ai_compatible_api";
-        open_ai_compatible_api = {
-          api_url = "https://llm-proxy.edgez.live/v1/completions";
-          model = "claude-haiku-4-5";
-          prompt_format = "infer";
-          max_output_tokens = 64;
-        };
-      };
       feature_flags = {
         tabular-data-preview = "on";
         notebooks = "on";
@@ -148,6 +136,9 @@
             "--auto-approve"
             "acp"
           ];
+        };
+        github-copilot-cli = {
+          type = "registry";
         };
       };
     };
