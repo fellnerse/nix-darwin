@@ -18,6 +18,7 @@
       sops
       kubectl
       k9s
+      github-copilot-cli
     ];
   };
 
