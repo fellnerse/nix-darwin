@@ -27,16 +27,9 @@ let
   # Written to ~/.claude/settings.json — merged (Claude Code owns the rest)
   claudeStaticSettings = {
     enabledPlugins = {
-      "compound-engineering@compound-engineering-plugin" = true;
       "statusline@ai-tooling-marketplace" = true;
     };
     extraKnownMarketplaces = {
-      "compound-engineering-plugin" = {
-        source = {
-          source = "github";
-          repo = "EveryInc/compound-engineering-plugin";
-        };
-      };
       "ai-tooling-marketplace" = {
         source = {
           source = "git";
@@ -91,4 +84,5 @@ in
       static = jsonFormat.generate "claude-static-settings.json" claudeStaticSettings;
     }
   );
+
 }
