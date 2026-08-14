@@ -76,9 +76,9 @@ let
   configConfig = {
     setupVersion = 1;
     modelRoles = {
-      smol = "netlight-anthropic/claude-haiku-4-5";
-      default = "netlight-anthropic/claude-sonnet-5:low";
-      slow = "netlight-anthropic/claude-opus-5";
+      smol = "netlight/gpt-5.6-luna";
+      default = "netlight/gpt-5.6-terra";
+      slow = "netlight/gpt-5.6-sol";
     };
     autolearn = {
       enabled = true;
