@@ -56,6 +56,7 @@
             "ty"
             "ruff"
             "pytest-language-server" # I think I need that one, so the fixtures of pytest are resolved correctly
+            "!pylsp" # just redundant with ty, as it includes lsp
             "!basedpyright"
             "!pyright"
             "..."
