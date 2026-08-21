@@ -57,7 +57,7 @@
             "ruff"
             "pytest-language-server" # I think I need that one, so the fixtures of pytest are resolved correctly
             "!pylsp" # just redundant with ty, as it includes lsp
-            "!basedpyright"
+            "basedpyright" # we need basedpyright for the correct import suggestions
             "!pyright"
             "..."
           ];
@@ -68,6 +68,20 @@
           formatter = {
             language_server = {
               name = "ruff";
+            };
+          };
+        };
+      };
+      lsp = {
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              disableOrganizeImports = true;
+              analysis = {
+                autoImportCompletions = true;
+                # typeCheckingMode = "off"; # those are for now disabled on repo level -> no conflict with ty
+                # diagnosticSeverityOverrides = { };
+              };
             };
           };
         };
