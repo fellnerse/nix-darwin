@@ -46,6 +46,12 @@
     '';
 
     functions = {
+      # OMP is installed in Homebrew's private-user prefix; avoid its self-updater creating a sefe-owned Brew lock.
+      omp = {
+        body = ''
+          sudo -u private env HOME=/Users/private HOMEBREW_CACHE=/Users/private/Library/Caches/Homebrew /opt/homebrew/bin/omp $argv
+        '';
+      };
       git-cleanup-branches = {
         body = ''
           # Delete local branches that have been merged
