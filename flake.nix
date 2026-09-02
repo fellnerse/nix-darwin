@@ -36,7 +36,6 @@
           config.allowUnfree = true;
           overlays = [
             self.overlays.unstable-packages
-            self.overlays.custom-packages
           ];
         };
 
@@ -83,16 +82,6 @@
               inherit system;
               config.allowUnfree = true;
             };
-          };
-
-        # Custom packages
-        custom-packages =
-          final: prev:
-          let
-            system = final.stdenv.hostPlatform.system;
-          in
-          {
-            gastown = final.callPackage ./pkgs/gastown.nix { };
           };
       };
 
