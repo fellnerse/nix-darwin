@@ -74,6 +74,42 @@ let
           type = "litellm";
         };
       };
+      "non-eu" = {
+        baseUrl = "https://llm-proxy.dev.ai.edgez.live";
+        api = "openai-completions";
+        apiKey = "NON_EU_API";
+        authHeader = true;
+        auth = "apiKey";
+        discovery = {
+          type = "litellm";
+        };
+        models = [
+          {
+            id = "glm-5.2";
+            name = "GLM 5.2";
+          }
+          {
+            id = "evroc-glm-5-2";
+            name = "Evroc GLM 5.2";
+          }
+          {
+            id = "berget-glm-5-2";
+            name = "Berget GLM 5.2";
+          }
+          {
+            id = "kimi-k3";
+            name = "Kimi K3";
+          }
+          {
+            id = "qwen3.8-27b";
+            name = "Qwen 3.8 27B";
+          }
+          {
+            id = "llama-3-3-70b";
+            name = "Llama 3.3 70B";
+          }
+        ];
+      };
     };
   };
 

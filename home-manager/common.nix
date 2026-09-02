@@ -18,7 +18,7 @@
     nixfmt # nix formatter used by zeditor
     stats # shows networking stats in status bar
     gh
-    mise
+    unstable.mise
     pre-commit
     glab
   ];
