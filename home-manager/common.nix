@@ -63,16 +63,16 @@
         User = "root";
         ProxyJump = "homeassistant.tail";
       };
-      # OpenClaw LXC container on PVE - reachable via HA jump host
-      "Host openclaw.tail" = {
-        HostName = "192.168.178.61";
-        User = "sefe";
-        ProxyJump = "homeassistant.tail";
-      };
-      "Host openclaw.tail.root" = {
-        HostName = "192.168.178.61";
+      # herdr LXC container (101) on PVE - agent runtime, DHCP so go via mDNS.
+      # Lost every key here? `pct enter 101` on the pve host gives a root shell
+      # without credentials (pve itself via its web UI or physical console).
+      "Host herdr.local" = {
         User = "root";
-        ProxyJump = "homeassistant.tail";
+      };
+      # herdr is its own Tailscale node, so no jump host needed - works from anywhere
+      "Host herdr.tail" = {
+        HostName = "herdr.tail401ae4.ts.net";
+        User = "root";
       };
     };
   };

@@ -13,6 +13,10 @@
   brews = [
     "baobab"
     "can1357/tap/omp" # oh-my-pi coding agent CLI, not packaged in nixpkgs
+    # herdr agent multiplexer. nixpkgs has it, but lags (0.7.5 vs 0.8.2 upstream) and
+    # the client must match the herdr server it attaches to (LXC 101 on pve, stable
+    # channel). Homebrew core tracks upstream stable, so both ends stay in step.
+    "herdr"
     "docker-credential-helper"
     "glib"
     "mole"
