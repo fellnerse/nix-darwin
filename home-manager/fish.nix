@@ -36,6 +36,14 @@
       # Homebrew
       eval (/opt/homebrew/bin/brew shellenv)
 
+      # Homebrew completions (herdr, omp, mole, brew, etc.)
+      if test -d /opt/homebrew/share/fish/vendor_completions.d
+          set -p fish_complete_path /opt/homebrew/share/fish/vendor_completions.d
+      end
+      if test -d /opt/homebrew/share/fish/completions
+          set -p fish_complete_path /opt/homebrew/share/fish/completions
+      end
+
       # nix-your-shell
       nix-your-shell fish | source
 

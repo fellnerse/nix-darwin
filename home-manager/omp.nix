@@ -97,6 +97,14 @@ let
             name = "Berget GLM 5.2";
           }
           {
+            id = "glm-5.3-flash";
+            name = "GLM 5.3 Flash";
+          }
+          {
+            id = "berget-glm-5-3-flash";
+            name = "Berget GLM 5.3 Flash";
+          }
+          {
             id = "kimi-k3";
             name = "Kimi K3";
           }
