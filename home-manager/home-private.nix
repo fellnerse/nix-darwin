@@ -10,7 +10,6 @@
     homeDirectory = "/Users/private";
     stateVersion = "24.05";
     packages = with pkgs; [
-      mise
     ];
   };
 
