@@ -112,7 +112,9 @@ NON_EU_API="sk-..."
 
 ### Models Configuration (`/root/.omp/agent/models.yml`)
 
-Configured to match the providers in `home-manager/omp.nix`:
+Configured to match the providers in `home-manager/omp.nix`, but **manually** -
+`omp.nix` is deliberately not imported by `home-manager/home-herdr.nix` (see
+§6), so this file stays hand-mirrored, not nix-managed:
 
 - `non-eu`: `https://llm-proxy.dev.ai.edgez.live` (`api: openai-completions`, `litellm` discovery)
 
@@ -152,3 +154,71 @@ ssh pve.tail "dmesg -T | grep -E 'oom-kill|killed process'"
 # Force stop and restart the container
 ssh pve.tail "pct stop 101 && pct start 101"
 ```
+
+### Disk Space
+
+Root disk is 16 GiB total (§1) and Nix chews through it fast (builds, tarball
+cache, eval cache). Check and reclaim:
+
+```bash
+ssh herdr.tail "df -h /"
+
+# Nix garbage collection - deletes unreferenced store paths (old
+# generations, build-time-only deps); everything regenerates/re-downloads
+# on the next build. Same as the repo's `mise run gc` task.
+ssh herdr.tail "nix-collect-garbage -d"
+
+# If still tight, regenerable build caches are usually the next-biggest
+# offenders - safe to wipe, all repopulate on demand:
+ssh herdr.tail "rm -rf ~/.cache/ms-playwright/* ~/.cache/node-gyp ~/.cache/nix/tarball-cache-v2 ~/.cache/nix/eval-cache-v6 ~/.local/share/pnpm/store"
+ssh herdr.tail "npm cache clean --force"
+
+# node_modules under /root/projects/*/node_modules are also fair game
+# (npm/pnpm install regenerates them) - check nothing's actively running
+# against them first (ps aux | grep -E 'node|pnpm|vite|next').
+```
+
+Growing the actual LXC root disk (`pct resize 101 rootfs +<N>G` on the PVE
+host, or via the PVE web UI) has to be run from a machine with the
+`pve.tail` SSH alias (your laptop) - herdr itself has no outbound
+credentials to reach `pve.local`/`pve.tail`, only inbound `authorized_keys`.
+
+---
+
+## 6. Nix / home-manager Management
+
+herdr has no nix-darwin/NixOS - it's a standalone `home-manager` profile for
+`root` (everything here runs as root today), defined in
+`home-manager/home-herdr.nix` and wired up as `homeConfigurations.herdr` in
+`flake.nix`. It intentionally reuses only `home-manager/claude.nix` from the
+rest of the repo:
+
+- **Managed:** Claude Code's global env (`~/.claude/settings.json` →
+  `env`: model routing through the same `llm-proxy.edgez.live` proxy OMP
+  already uses, telemetry/error-reporting disabled via `DISABLE_TELEMETRY`
+  / `DISABLE_ERROR_REPORTING`) and the `context7` MCP server
+  (`~/.claude.json` → `mcpServers`).
+- **Not managed, on purpose:**
+  - `home-manager/omp.nix` (OMP's `models.yml`/`config.yml`/`mcp.json`) -
+    that's sefe/private-scoped personal provider config; herdr's
+    `/root/.omp/agent/*` stays manually maintained (see §4 above).
+  - The `atlassian` MCP server and the `ai-tooling-marketplace` Claude Code
+    plugin/statusline - both are sefe-only opt-ins added in
+    `home-manager/home.nix` (the marketplace plugin needs SSH access to
+    `gitlab.netlight.com`, which herdr doesn't have). `claude.nix` exposes
+    `options.claude.{mcpServers,settings}` precisely so per-profile files
+    can add these without every profile inheriting them.
+- **Config-merge safety:** every write goes through
+  `lib/config-merge.nix` (`mergeFile`/`setPath`), which deep-merges the
+  declared keys over whatever's already on disk rather than clobbering the
+  file - keys Claude Code itself writes at runtime (`theme`,
+  `feedbackDrafts`, ...) survive untouched.
+
+Apply changes (no local clone needed on herdr - pulls straight from GitHub):
+
+```bash
+ssh herdr.tail "nix run home-manager/release-26.05 -- switch --flake github:fellnerse/nix-darwin#herdr -b backup"
+```
+
+`-b backup` renames any pre-existing plain file `home-manager` would
+otherwise collide with (suffixed `.backup`) instead of failing.

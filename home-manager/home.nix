@@ -1,6 +1,7 @@
 {
   pkgs,
   inputs,
+  config,
   ...
 }:
 {
@@ -8,6 +9,32 @@
     ./common.nix
     inputs.mac-app-util.homeManagerModules.default
   ];
+
+  # sefe-only Claude Code extras: work MCP server + the ai-tooling-marketplace
+  # plugin/statusline (needs SSH access to gitlab.netlight.com, which only
+  # this profile has) - not shared via claude.nix's defaults.
+  claude.mcpServers.atlassian = {
+    type = "http";
+    url = "https://mcp.atlassian.com/v1/mcp";
+  };
+
+  claude.settings = {
+    enabledPlugins = {
+      "statusline@ai-tooling-marketplace" = true;
+    };
+    extraKnownMarketplaces = {
+      "ai-tooling-marketplace" = {
+        source = {
+          source = "git";
+          url = "git@gitlab.netlight.com:tech-open/ai-tooling/claude-skills.git";
+        };
+      };
+    };
+    statusLine = {
+      type = "command";
+      command = "${config.home.homeDirectory}/.claude/plugins/cache/ai-tooling-marketplace/statusline/1.0.0/hooks/statusline.sh";
+    };
+  };
 
   home = {
     username = "sefe";
