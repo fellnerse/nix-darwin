@@ -190,24 +190,34 @@ credentials to reach `pve.local`/`pve.tail`, only inbound `authorized_keys`.
 herdr has no nix-darwin/NixOS - it's a standalone `home-manager` profile for
 `root` (everything here runs as root today), defined in
 `home-manager/home-herdr.nix` and wired up as `homeConfigurations.herdr` in
-`flake.nix`. It intentionally reuses only `home-manager/claude.nix` from the
-rest of the repo:
+`flake.nix`. It reuses `home-manager/claude.nix` and `home-manager/fish.nix`
+from the rest of the repo (fish.nix's one macOS-only line - Homebrew
+shellenv - is guarded to no-op on Linux), plus declares its own terminal
+tooling directly (fzf, eza, bat, lazygit, autojump, starship, delta, git)
+mirroring the CLI subset of `common.nix` minus anything GUI/macOS-only:
 
 - **Managed:** Claude Code's global env (`~/.claude/settings.json` →
-  `env`: model routing through the same `llm-proxy.edgez.live` proxy OMP
-  already uses, telemetry/error-reporting disabled via `DISABLE_TELEMETRY`
-  / `DISABLE_ERROR_REPORTING`) and the `context7` MCP server
-  (`~/.claude.json` → `mcpServers`).
+  `env`: telemetry/error-reporting disabled via `DISABLE_TELEMETRY` /
+  `DISABLE_ERROR_REPORTING`, no LLM proxy routing - herdr authenticates
+  with a regular Anthropic subscription, unlike the sefe/mac profile) and
+  the `context7` MCP server (`~/.claude.json` → `mcpServers`).
 - **Not managed, on purpose:**
   - `home-manager/omp.nix` (OMP's `models.yml`/`config.yml`/`mcp.json`) -
     that's sefe/private-scoped personal provider config; herdr's
     `/root/.omp/agent/*` stays manually maintained (see §4 above).
-  - The `atlassian` MCP server and the `ai-tooling-marketplace` Claude Code
-    plugin/statusline - both are sefe-only opt-ins added in
-    `home-manager/home.nix` (the marketplace plugin needs SSH access to
-    `gitlab.netlight.com`, which herdr doesn't have). `claude.nix` exposes
-    `options.claude.{mcpServers,settings}` precisely so per-profile files
-    can add these without every profile inheriting them.
+  - The `atlassian` MCP server, the `ai-tooling-marketplace` Claude Code
+    plugin/statusline, and the `llm-proxy.edgez.live` routing env vars -
+    all sefe-only opt-ins added in `home-manager/home.nix` (the marketplace
+    plugin needs SSH access to `gitlab.netlight.com`, which herdr doesn't
+    have; the proxy is sefe's corporate LLM endpoint, not herdr's regular
+    subscription). `claude.nix` exposes `options.claude.{mcpServers,settings}`
+    precisely so per-profile files can add these without every profile
+    inheriting them.
+  - GUI/macOS-only pieces of `common.nix` (zed.nix, omp.nix, Firefox, the
+    Stats menu-bar app, launchd agents, mac-app-util, Homebrew/JetBrains
+    `PATH` entries) - herdr is headless, so only the CLI-tool subset is
+    duplicated into `home-herdr.nix` directly rather than importing
+    `common.nix` wholesale.
 - **Config-merge safety:** every write goes through
   `lib/config-merge.nix` (`mergeFile`/`setPath`), which deep-merges the
   declared keys over whatever's already on disk rather than clobbering the

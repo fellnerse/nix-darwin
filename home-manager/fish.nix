@@ -33,8 +33,10 @@
     '';
 
     interactiveShellInit = ''
-      # Homebrew
-      eval (/opt/homebrew/bin/brew shellenv)
+      # Homebrew (macOS only - no-op on Linux, e.g. herdr, where it doesn't exist)
+      if test -x /opt/homebrew/bin/brew
+          eval (/opt/homebrew/bin/brew shellenv)
+      end
 
       # Homebrew completions (herdr, omp, mole, brew, etc.)
       if test -d /opt/homebrew/share/fish/vendor_completions.d
