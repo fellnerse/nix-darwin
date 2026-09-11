@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a nix-darwin + home-manager configuration for an Apple Silicon MacBook Pro. It manages system configuration, user dotfiles, and package installations declaratively through Nix flakes.
+This is a nix-darwin + home-manager configuration for an Apple Silicon MacBook Pro, plus a standalone home-manager profile for `herdr` (a Debian LXC on the home Proxmox server - see `docs/infrastructure/herdr-server.md`). It manages system configuration, user dotfiles, and package installations declaratively through Nix flakes.
 
 ## Common Commands
 
@@ -29,9 +29,11 @@ flake.nix                           # Entry point - defines inputs, outputs, ove
 │   ├── configuration.nix           # System-level: packages, fonts, macOS defaults, users
 │   └── homebrew.nix               # Homebrew casks and App Store apps
 └── home-manager/
-    ├── common.nix                  # Shared user config: shell, git, editors, CLI tools
-    ├── home.nix                    # "sefe" user - imports common.nix + work settings
-    └── home-private.nix            # "private" user - imports common.nix + personal settings
+    ├── common.nix                  # Shared user config: shell, git, editors, CLI tools (macOS-only - launchd, mac-app-util; do not import into herdr)
+    ├── home.nix                    # "sefe" user - imports common.nix + work settings + sefe-only claude.nix opt-ins (atlassian MCP, ai-tooling-marketplace)
+    ├── home-private.nix            # "private" user - imports common.nix + personal settings
+    ├── home-herdr.nix              # "herdr" (root, Linux, no nix-darwin) - imports only claude.nix, no common.nix/omp.nix
+    └── claude.nix                  # Claude Code config; exposes options.claude.{mcpServers,settings} so profiles can add keys without every profile inheriting them
 
 ## Documented Solutions
 
@@ -41,7 +43,8 @@ flake.nix                           # Entry point - defines inputs, outputs, ove
 ### Key Patterns
 
 - **Unstable packages**: Access via `pkgs.unstable.*` (overlay defined in flake.nix)
-- **Multi-user**: Two home-manager configs share `common.nix` to avoid duplication
+- **Multi-user**: `home.nix`/`home-private.nix` share `common.nix` (macOS-only); `home-herdr.nix` (Linux/root) shares only the cross-platform `claude.nix`, not `common.nix`
+- **Per-profile Claude Code config**: `claude.nix` declares `options.claude.mcpServers`/`options.claude.settings` with shared defaults (context7 MCP, telemetry opt-out, model routing env); a profile file adds its own keys (e.g. `home.nix`'s `atlassian` MCP server) and home-manager merges them - no profile has to redeclare the whole set
 - **mac-app-util trampolines**: Enables Nix apps to work with macOS Spotlight/Dock
 
 ## Where to Make Changes
@@ -54,6 +57,8 @@ flake.nix                           # Entry point - defines inputs, outputs, ove
 | Change macOS defaults | `hosts/mbp/configuration.nix` → `system.defaults` |
 | Modify shell config | `home-manager/common.nix` → `programs.fish` |
 | Change git settings | `home-manager/common.nix` (shared) or user-specific files (overrides) |
+| Change herdr's Claude Code config | `home-manager/home-herdr.nix` / `home-manager/claude.nix` - never `common.nix` (macOS-only, breaks eval on Linux) |
+| Add an MCP server/setting to one profile only | `options.claude.mcpServers`/`options.claude.settings` in that profile's file (see `home.nix`'s `atlassian` entry), not `claude.nix`'s shared defaults |
 
 ## Troubleshooting
 

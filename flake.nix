@@ -25,7 +25,10 @@
       ...
     }:
     let
-      systems = [ "aarch64-darwin" ];
+      systems = [
+        "aarch64-darwin"
+        "x86_64-linux"
+      ];
       forAllSystems = nixpkgs.lib.genAttrs systems;
 
       # Create consistent pkgs for each system with overlays and unfree packages
@@ -67,6 +70,14 @@
           pkgs = pkgsFor.aarch64-darwin;
           extraSpecialArgs = { inherit self inputs; };
           modules = [ ./home-manager/home-private.nix ];
+        };
+
+        # Debian LXC (VMID 101, PVE) - see docs/infrastructure/herdr-server.md.
+        # Apply with: nix run home-manager/release-26.05 -- switch --flake github:fellnerse/nix-darwin#herdr
+        herdr = home-manager.lib.homeManagerConfiguration {
+          pkgs = pkgsFor.x86_64-linux;
+          extraSpecialArgs = { inherit self inputs; };
+          modules = [ ./home-manager/home-herdr.nix ];
         };
       };
 
