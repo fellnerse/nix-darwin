@@ -189,7 +189,7 @@ credentials to reach `pve.local`/`pve.tail`, only inbound `authorized_keys`.
 
 herdr has no nix-darwin/NixOS - it's a standalone `home-manager` profile for
 `root` (everything here runs as root today), defined in
-`home-manager/home-herdr.nix` and wired up as `homeConfigurations.herdr` in
+`home-manager/home-herdr.nix` and wired up as `homeConfigurations.root` in
 `flake.nix`. It reuses `home-manager/claude.nix` and `home-manager/fish.nix`
 from the rest of the repo (fish.nix's one macOS-only line - Homebrew
 shellenv - is guarded to no-op on Linux), plus declares its own terminal
@@ -227,7 +227,7 @@ mirroring the CLI subset of `common.nix` minus anything GUI/macOS-only:
 Apply changes (no local clone needed on herdr - pulls straight from GitHub):
 
 ```bash
-ssh herdr.tail "nix run home-manager/release-26.05 -- switch --flake github:fellnerse/nix-darwin#herdr -b backup"
+ssh herdr.tail "nix run home-manager/release-26.05 -- switch --flake github:fellnerse/nix-darwin#root -b backup"
 ```
 
 `-b backup` renames any pre-existing plain file `home-manager` would

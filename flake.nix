@@ -73,8 +73,10 @@
         };
 
         # Debian LXC (VMID 101, PVE) - see docs/infrastructure/herdr-server.md.
-        # Apply with: nix run home-manager/release-26.05 -- switch --flake github:fellnerse/nix-darwin#herdr
-        herdr = home-manager.lib.homeManagerConfiguration {
+        # Key is "root" (not "herdr") to match `$USER` on the box, so
+        # `home-manager switch --flake .#$USER` (mise's `user` task) resolves.
+        # Apply with: nix run home-manager/release-26.05 -- switch --flake github:fellnerse/nix-darwin#root
+        root = home-manager.lib.homeManagerConfiguration {
           pkgs = pkgsFor.x86_64-linux;
           extraSpecialArgs = { inherit self inputs; };
           modules = [ ./home-manager/home-herdr.nix ];
