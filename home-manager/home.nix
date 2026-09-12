@@ -19,6 +19,16 @@
   };
 
   claude.settings = {
+    # Route through sefe's corporate LLM proxy - sefe-only, everyone else
+    # (private, herdr) uses a regular Anthropic subscription directly.
+    env = {
+      ANTHROPIC_BASE_URL = "https://llm-proxy.edgez.live/";
+      ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-5";
+      ANTHROPIC_DEFAULT_SONNET_MODEL = "claude-sonnet-5";
+      ANTHROPIC_DEFAULT_HAIKU_MODEL = "claude-haiku-4-5"; # 4.6 not available as of 18.6.26
+      ANTHROPIC_MODEL = "sonnet";
+      CLAUDE_CODE_SKIP_BEDROCK_AUTH = "true";
+    };
     enabledPlugins = {
       "statusline@ai-tooling-marketplace" = true;
     };

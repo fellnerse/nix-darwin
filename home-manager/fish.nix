@@ -33,8 +33,10 @@
     '';
 
     interactiveShellInit = ''
-      # Homebrew
-      eval (/opt/homebrew/bin/brew shellenv)
+      # Homebrew (macOS only - no-op on Linux, e.g. herdr, where it doesn't exist)
+      if test -x /opt/homebrew/bin/brew
+          eval (/opt/homebrew/bin/brew shellenv)
+      end
 
       # Homebrew completions (herdr, omp, mole, brew, etc.)
       if test -d /opt/homebrew/share/fish/vendor_completions.d
@@ -56,10 +58,12 @@
     functions = {
       omp = {
         body = ''
-          if test "$argv[1]" = update
+          # `omp update` needs to run as the 'private' user that owns Homebrew (macOS only).
+          # Where there's no Homebrew (e.g. herdr), just run whatever `omp` is on $PATH.
+          if test "$argv[1]" = update; and test -x /opt/homebrew/bin/omp
               sudo -u private env HOME=/Users/private HOMEBREW_CACHE=/Users/private/Library/Caches/Homebrew /opt/homebrew/bin/omp $argv
           else
-              /opt/homebrew/bin/omp $argv
+              command omp $argv
           end
         '';
       };

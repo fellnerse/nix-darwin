@@ -10,7 +10,6 @@
   # Common packages
   home.packages = with pkgs; [
     nix-your-shell
-    shell-gpt
     unstable.gemini-cli
     unstable.uv
     unstable.ty
@@ -137,13 +136,6 @@
 
   programs.firefox = {
     enable = true;
-  };
-
-  programs.zellij = {
-    enable = true;
-    settings = {
-      web_server = true;
-    };
   };
 
   # Stats: Menu bar app that runs silently in the background
