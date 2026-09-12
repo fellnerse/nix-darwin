@@ -58,10 +58,12 @@
     functions = {
       omp = {
         body = ''
-          if test "$argv[1]" = update
+          # `omp update` needs to run as the 'private' user that owns Homebrew (macOS only).
+          # Where there's no Homebrew (e.g. herdr), just run whatever `omp` is on $PATH.
+          if test "$argv[1]" = update; and test -x /opt/homebrew/bin/omp
               sudo -u private env HOME=/Users/private HOMEBREW_CACHE=/Users/private/Library/Caches/Homebrew /opt/homebrew/bin/omp $argv
           else
-              /opt/homebrew/bin/omp $argv
+              command omp $argv
           end
         '';
       };
