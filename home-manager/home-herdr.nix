@@ -24,7 +24,7 @@
     stateVersion = "24.05";
     packages = with pkgs; [
       nix-your-shell
-      unstable.gemini-cli
+      unstable.antigravity-cli
       nixd # nix language server
       nixfmt # nix formatter
       gh
