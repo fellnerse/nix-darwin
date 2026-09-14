@@ -133,11 +133,13 @@
       # I'm not sure where the auth tokens comes from, but this seems to be currently out of budget, where as the claude code integration still works
       # ah this is set via NL_CODEPILOT_API_KEY, which was different from ANTHROPIC_AUTH_TOKEN
       agent = {
-        default_model = {
-          provider = "NL-Codepilot";
-          model = "claude-sonnet-4-6";
-        };
-        model_parameters = [ ];
+        expand_terminal_card = false;
+        expand_edit_card = false;
+        play_sound_when_agent_done = "when_hidden";
+        show_turn_stats = true;
+        use_modifier_to_send = true;
+        thinking_display = "preview";
+        enable_feedback = false;
       };
       feature_flags = {
         tabular-data-preview = "on";
@@ -151,6 +153,9 @@
             "--auto-approve"
             "acp"
           ];
+        };
+        antigravity-acp = {
+          type = "registry";
         };
         github-copilot-cli = {
           type = "registry";
