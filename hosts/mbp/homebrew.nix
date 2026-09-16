@@ -1,6 +1,7 @@
 {
   enable = true;
   user = "private";
+  greedyCasks = true;
   onActivation = {
     # updates homebrew packages on activation,
     # can make darwin-rebuild much slower (otherwise i'd forget to do it ever though)
@@ -24,9 +25,8 @@
   casks = [
     # "bitwarden" the cask version does not support fingerprint auth enymore
     "arc"
-    # "bambu-studio" This is super unreliable with all the updates the app wants to install itself
+    "bambu-studio"
     "bruno"
-    "crossover"
     "ghostty"
     "imageoptim"
     "jetbrains-toolbox"
