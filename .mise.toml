@@ -37,6 +37,10 @@ run = 'nix run github:hraban/mac-app-util -- mktrampoline "/nix/store/pfm28jpyp5
 description = "Switch home-manager for current user"
 run = "home-manager switch --flake .#$USER -b backup"
 
+[tasks.deploy-herdr]
+description = "Deploy home-manager profile to herdr"
+run = 'ssh herdr.tail "nix run home-manager/release-26.05 -- switch --flake github:fellnerse/nix-darwin#root -b backup"'
+
 [tasks.hydra-check]
 description = "Check package availability in Hydra cache"
 run = "nix-shell -p hydra-check --run 'hydra-check uv --arch aarch64-darwin --channel nixpkgs-unstable'"

@@ -13,6 +13,7 @@ mise run check          # Validate configuration without building
 mise run build          # Build system without switching
 mise run system         # Build and switch system config (requires sudo)
 mise run user           # Switch home-manager for current user
+mise run deploy-herdr   # Deploy home-manager profile to herdr from GitHub
 mise run update         # Update all flake inputs
 mise run update-unstable    # Update only nixpkgs-unstable
 mise run gc             # Garbage collect old generations
