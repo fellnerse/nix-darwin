@@ -6,6 +6,12 @@
     # how to use stable and unstable at the same time
     # https://nixos.wiki/wiki/Flakes#Importing_packages_from_multiple_channels
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    # TEMPORARY pin, see the claude-code override in overlays.unstable-packages.
+    # claude-code 2.1.280 is the first release that accepts claude-opus-5-5;
+    # nixos-unstable still carries 2.1.278 (the bump landed on nixpkgs master
+    # on 2026-09-22). Drop this input and the override once nixos-unstable is
+    # at >= 2.1.280 - `mise run update-unstable` then covers it again.
+    nixpkgs-claude-code.url = "github:NixOS/nixpkgs/5ee9f0ecf9ea4ef788544118d184a5d37baf5eee";
     nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-26.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-26.05";
@@ -91,10 +97,24 @@
             system = final.stdenv.hostPlatform.system;
           in
           {
-            unstable = import inputs.nixpkgs-unstable {
-              inherit system;
-              config.allowUnfree = true;
-            };
+            unstable =
+              (import inputs.nixpkgs-unstable {
+                inherit system;
+                config.allowUnfree = true;
+              })
+              # TEMPORARY: pull only claude-code from the pinned nixpkgs-claude-code
+              # input (2.1.280, needed for claude-opus-5-5) instead of nixos-unstable
+              # (2.1.278). Remove this override together with the input once
+              # nixos-unstable has >= 2.1.280.
+              // {
+                inherit
+                  (import inputs.nixpkgs-claude-code {
+                    inherit system;
+                    config.allowUnfree = true;
+                  })
+                  claude-code
+                  ;
+              };
           };
       };
 

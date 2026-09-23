@@ -159,6 +159,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-claude-code": {
+      "locked": {
+        "lastModified": 1790096840,
+        "narHash": "sha256-JNtzjH763OWWbl09TTtI2+DuNKtAflqlWEHJ7b6F57Q=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "5ee9f0ecf9ea4ef788544118d184a5d37baf5eee",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "5ee9f0ecf9ea4ef788544118d184a5d37baf5eee",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1765674936,
@@ -244,6 +260,7 @@
         "mac-app-util": "mac-app-util",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_4",
+        "nixpkgs-claude-code": "nixpkgs-claude-code",
         "nixpkgs-unstable": "nixpkgs-unstable"
       }
     },
