@@ -46,9 +46,15 @@ description = "Check package availability in Hydra cache"
 run = "nix-shell -p hydra-check --run 'hydra-check uv --arch aarch64-darwin --channel nixpkgs-unstable'"
 
 [tasks.gc]
-description = "Garbage collect old generations"
+description = "Garbage collect Nix store (keeps 14d of generations)"
 run = """
-nix-env --delete-generations old
+# /etc/static is no GC root: if drifted, GC eats the etc that /etc needs (kills PATH, flakes, sudo).
+# Idempotent relink, same as activation does. Why: docs/solutions/system-issues/reclaiming-disk-space-nix-darwin.md
+sudo ln -sfn "$(readlink -f /run/current-system/etc)" /etc/static
+# Bare `-d` leaves nothing to roll back to.
+sudo nix-collect-garbage --delete-older-than 14d
+# nix-collect-garbage skips the standalone profiles in ~/.local/state/nix/profiles.
+nix-env --delete-generations 14d
+nix-env -p ~/.local/state/nix/profiles/home-manager --delete-generations 14d
 nix-store --gc
-nix-collect-garbage -d
 """
