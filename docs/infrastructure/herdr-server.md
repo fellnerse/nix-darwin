@@ -143,6 +143,31 @@ Changes to LXC limits apply immediately without restarting:
 ssh pve.tail "pct set 101 -memory 4096 -swap 2048"
 ```
 
+### tailscaled Restart Policy
+
+`tailscaled.service` has a drop-in override at
+`/etc/systemd/system/tailscaled.service.d/override.conf` setting
+`Restart=always` (base unit ships `Restart=on-failure`). This is manual,
+outside Nix/home-manager (see §6) - **reapply after a container rebuild**:
+
+```bash
+ssh herdr.tail "mkdir -p /etc/systemd/system/tailscaled.service.d && cat > /etc/systemd/system/tailscaled.service.d/override.conf <<EOF
+[Service]
+Restart=always
+EOF
+systemctl daemon-reload"
+```
+
+Why: on 2026-10-13, an unrelated coding-agent session ran a port-cleanup
+loop (`lsof -ti:$p -sTCP:LISTEN | xargs -r kill` over a range of scratch
+ports) that happened to include `8443` - the same port `tailscale serve`
+binds on this box (see §3). That sent `tailscaled` a plain SIGTERM, which
+is a clean exit (code 0), so `Restart=on-failure` never kicked in and the
+container stayed off the tailnet for over a day until manually restarted
+(`pct exec 101 -- systemctl start tailscaled` from `pve.tail`, no SSH into
+herdr needed). `Restart=always` makes tailscaled self-heal from this
+class of accidental kill regardless of what causes it.
+
 ### Recovering from an OOM Hang
 
 If the container stops responding due to memory thrashing:
