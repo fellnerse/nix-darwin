@@ -7,7 +7,6 @@
 {
   imports = [
     ./common.nix
-    inputs.mac-app-util.homeManagerModules.default
   ];
 
   # sefe-only Claude Code extras: work MCP server + the ai-tooling-marketplace
@@ -49,7 +48,7 @@
   home = {
     username = "sefe";
     homeDirectory = "/Users/sefe";
-    stateVersion = "24.05";
+    stateVersion = "26.05";
     packages = with pkgs; [
       # teams
       sops

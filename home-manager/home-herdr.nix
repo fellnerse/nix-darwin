@@ -21,7 +21,7 @@
   home = {
     username = "root";
     homeDirectory = "/root";
-    stateVersion = "24.05";
+    stateVersion = "26.05";
     packages = with pkgs; [
       nix-your-shell
       unstable.antigravity-cli

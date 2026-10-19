@@ -239,7 +239,7 @@ mirroring the CLI subset of `common.nix` minus anything GUI/macOS-only:
     precisely so per-profile files can add these without every profile
     inheriting them.
   - GUI/macOS-only pieces of `common.nix` (zed.nix, omp.nix, Firefox, the
-    Stats menu-bar app, launchd agents, mac-app-util, Homebrew/JetBrains
+    Stats menu-bar app, launchd agents, Homebrew/JetBrains
     `PATH` entries) - herdr is headless, so only the CLI-tool subset is
     duplicated into `home-herdr.nix` directly rather than importing
     `common.nix` wholesale.

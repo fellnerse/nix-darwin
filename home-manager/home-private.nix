@@ -2,13 +2,12 @@
 {
   imports = [
     ./common.nix
-    inputs.mac-app-util.homeManagerModules.default
   ];
 
   home = {
     username = "private";
     homeDirectory = "/Users/private";
-    stateVersion = "24.05";
+    stateVersion = "26.05";
     packages = with pkgs; [
     ];
   };

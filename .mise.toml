@@ -29,10 +29,6 @@ run = "sudo darwin-rebuild check --flake .#Sebastians-MacBook-Pro-2"
 description = "Build system without switching"
 run = "sudo darwin-rebuild build --flake .#Sebastians-MacBook-Pro-2"
 
-[tasks.trampoline]
-description = "Create app trampolines for macOS Spotlight/Dock"
-run = 'nix run github:hraban/mac-app-util -- mktrampoline "/nix/store/pfm28jpyp52a60ygc57bwn7x1wx7isq4-iterm2-3.5.2/Applications/iTerm2.app" /Applications/MyApp.app'
-
 [tasks.user]
 description = "Switch home-manager for current user"
 run = "home-manager switch --flake .#$USER -b backup"

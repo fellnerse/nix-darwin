@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  # Suppress warning: fish sets generateCaches = true by default, but man.package
+  # is null on macOS (which uses system /usr/bin/man). Upstream fix in HM PR #9272.
+  programs.man.generateCaches = false;
+
   programs.fish = {
     enable = true;
 
