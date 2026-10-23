@@ -38,6 +38,8 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+    # herdr worktrees carry the same .envrc as their checkout, but a new path is never allowed
+    config.whitelist.prefix = [ "/root/.herdr/worktrees" ];
   };
 
   programs.starship = {
