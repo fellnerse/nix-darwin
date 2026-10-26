@@ -19,3 +19,7 @@ Optional: Get a free API key at [context7.com/dashboard](https://context7.com/da
 ```bash
 claude mcp add --scope user context7 -- npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
 ```
+
+## Tailscale startup
+
+The `sefe` Home Manager profile opens `/Applications/Tailscale.app` in the background at login through a LaunchAgent (`home-manager/home.nix`).

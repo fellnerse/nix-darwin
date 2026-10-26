@@ -58,6 +58,21 @@
     ];
   };
 
+  # Start Tailscale in the background at login for sefe only.
+  launchd.agents.tailscale = {
+    enable = true;
+    config = {
+      ProgramArguments = [
+        "/usr/bin/open"
+        "-g"
+        "-a"
+        "/Applications/Tailscale.app"
+      ];
+      RunAtLoad = true;
+      KeepAlive = false;
+    };
+  };
+
   # Sefe-specific starship settings
   programs.starship.settings = {
     aws.disabled = true;
