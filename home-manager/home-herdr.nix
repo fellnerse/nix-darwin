@@ -33,6 +33,13 @@
     ];
   };
 
+  # Send/receive mail for agent projects on sheep-it.sebastianfellner.de.
+  # Hosted + OAuth, so no API key lands in the Nix store.
+  claude.mcpServers.resend = {
+    type = "http";
+    url = "https://mcp.resend.com/mcp";
+  };
+
   programs.home-manager.enable = true;
 
   programs.direnv = {
