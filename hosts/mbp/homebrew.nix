@@ -1,7 +1,7 @@
 {
   enable = true;
   user = "private";
-  greedyCasks = true;
+  greedyCasks = false;
   onActivation = {
     # updates homebrew packages on activation,
     # can make darwin-rebuild much slower (otherwise i'd forget to do it ever though)
@@ -24,9 +24,7 @@
   ];
   casks = [
     # "bitwarden" the cask version does not support fingerprint auth enymore
-    "arc"
     "bambu-studio"
-    "bruno"
     "ghostty"
     "imageoptim"
     "jetbrains-toolbox"
@@ -37,7 +35,6 @@
     "spotify"
     "steam"
     "sublime-text"
-    "tailscale-app"
     "music-decoy"
     "zed"
     "zen"

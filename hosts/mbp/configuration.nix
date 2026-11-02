@@ -128,6 +128,9 @@
     '';
   };
 
+  # The CLI daemon uses utun instead of requiring a system extension.
+  services.tailscale.enable = true;
+
   # Add ability to used TouchID for sudo authentication
   security.pam.services.sudo_local.touchIdAuth = true;
 

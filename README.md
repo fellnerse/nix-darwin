@@ -20,6 +20,8 @@ Optional: Get a free API key at [context7.com/dashboard](https://context7.com/da
 claude mcp add --scope user context7 -- npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
 ```
 
-## Tailscale startup
+## Tailscale
 
-The `sefe` Home Manager profile opens `/Applications/Tailscale.app` in the background at login through a LaunchAgent (`home-manager/home.nix`).
+`services.tailscale` in `hosts/mbp/configuration.nix` runs the CLI-only `tailscaled` as a system LaunchDaemon. It uses macOS `utun`, not a Tailscale system extension, and has no GUI. Manage it with `sudo tailscale up` and `sudo tailscale status`; nix-darwin configures the `ts.net` MagicDNS resolver.
+
+First run `mise run user` to remove the old login launcher. Then quit and remove Tailscale.app, empty Trash, and reboot. After reboot, run `mise run system` to install the daemon, then `sudo tailscale up` to authenticate.
