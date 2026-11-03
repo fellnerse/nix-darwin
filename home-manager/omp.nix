@@ -41,19 +41,6 @@ let
           };
         };
       };
-      "azure-foundry" = {
-        baseUrl = "https://ki-ems-foundry-swec.openai.azure.com/openai/v1";
-        apiKey = "AZURE_FOUNDRY_API_KEY";
-        api = "azure-openai-responses";
-        # discovery seems to work, but will show all "available" models which are then not available.
-        # seems like only the deployed models are there.
-        models = [
-          {
-            id = "gpt-5.6-luna";
-            name = "Foundry Luna";
-          }
-        ];
-      };
       # Claude models get their own provider using litellm's native anthropic-messages
       # endpoint (same one claude.nix points ANTHROPIC_BASE_URL at) instead of
       # openai-completions: going through the OpenAI-compat shim mangles thinking/reasoning
