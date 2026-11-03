@@ -101,17 +101,17 @@
                 max_tokens = 2000000;
               }
               {
-                name = "claude-opus-4-8";
+                name = "claude-opus-5-5";
                 display_name = "NL - Claude - opus";
                 max_tokens = 2000000;
               }
               {
-                name = "claude-sonnet-4-6";
+                name = "claude-sonnet-5-5";
                 display_name = "NL - Claude - sonnet";
                 max_tokens = 2000000;
               }
               {
-                name = "claude-haiku-4-5";
+                name = "claude-haiku-5-5";
                 display_name = "NL - Claude - haiku";
                 max_tokens = 2000000;
               }
