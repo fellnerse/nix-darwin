@@ -2,6 +2,7 @@
   pkgs,
   inputs,
   config,
+  lib,
   ...
 }:
 {
@@ -79,6 +80,23 @@
     name = "sefe 💯";
     email = "sefe@netlight.com"; # Replace with actual email
   };
+
+  # startwork8: stay-open applet that opens/closes the daily work app set.
+  # Source lives in scripts/startwork8.applescript and is recompiled into a
+  # local .app on every switch - deliberately NOT in iCloud Drive, since
+  # Script Editor saving a bundled .app there reliably throws Error -45
+  # (the File Provider sync daemon races the directory-replace write). Git
+  # history is the backup now, not iCloud.
+  home.activation.startwork8App =
+    let
+      appPath = "${config.home.homeDirectory}/Applications/startwork8.app";
+    in
+    lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      /usr/bin/pkill -f ${lib.escapeShellArg "${appPath}/Contents/MacOS/applet"} 2>/dev/null || true
+      rm -rf ${lib.escapeShellArg appPath}
+      mkdir -p ${lib.escapeShellArg "${config.home.homeDirectory}/Applications"}
+      /usr/bin/osacompile -s -o ${lib.escapeShellArg appPath} ${./scripts/startwork8.applescript}
+    '';
   # overwrite in client projects like this:
   # shellHook = ''
   #  # Project-specific git config (overrides home-manager defaults)
