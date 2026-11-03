@@ -46,6 +46,7 @@ flake.nix                           # Entry point - defines inputs, outputs, ove
 - **Multi-user**: `home.nix`/`home-private.nix` share `common.nix` (macOS-only); `home-herdr.nix` (Linux/root) shares only the cross-platform `claude.nix`, not `common.nix`
 - **Per-profile Claude Code config**: `claude.nix` declares `options.claude.mcpServers`/`options.claude.settings` with shared defaults (context7 MCP, telemetry opt-out, model routing env); a profile file adds its own keys (e.g. `home.nix`'s `atlassian` MCP server) and home-manager merges them - no profile has to redeclare the whole set
   - **Native copyApps**: Home Manager copies real `.app` bundles to `~/Applications/Home Manager Apps` for Spotlight/Dock compatibility
+- **Herdr desktop app (sheep theme)**: `home-manager/herdr-app.nix` (imported by `home.nix` and `home-private.nix`) installs `herdr-app/` (theme, bleat, `flock` mod) into `~/.config/herdr-app` on activation. Files are *copied*, not symlinked (Herdr rejects mod modules that resolve into the Nix store), so edits reach the app on `mise run user`. `layouts/sheep.json` is derived with `jq` from Herdr's own `main` layout, and only the `sounds` key of `settings.json` is merged. New files under `herdr-app/` must be `git add`ed or flake eval can't see them. If Herdr keeps a stale "theme not found" error after a switch, run `herdr-app do layout.switch` to `main` and back.
 
 ## Where to Make Changes
 
@@ -58,6 +59,7 @@ flake.nix                           # Entry point - defines inputs, outputs, ove
 | Modify shell config                           | `home-manager/common.nix` → `programs.fish`                                                                                                           |
 | Change git settings                           | `home-manager/common.nix` (shared) or user-specific files (overrides)                                                                                 |
 | Change herdr's Claude Code config             | `home-manager/home-herdr.nix` / `home-manager/claude.nix` - never `common.nix` (macOS-only, breaks eval on Linux)                                     |
+| Change the Herdr app's look (sheep, theme)    | `herdr-app/` (theme, `mods/flock/`) and `home-manager/herdr-app.nix`; never edit `~/.config/herdr-app` directly, activation overwrites it       |
 | Add an MCP server/setting to one profile only | `options.claude.mcpServers`/`options.claude.settings` in that profile's file (see `home.nix`'s `atlassian` entry), not `claude.nix`'s shared defaults |
 
 ## Troubleshooting

@@ -2,6 +2,7 @@
 {
   imports = [
     ./common.nix
+    ./herdr-app.nix
   ];
 
   home = {

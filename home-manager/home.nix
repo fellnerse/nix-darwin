@@ -8,6 +8,7 @@
 {
   imports = [
     ./common.nix
+    ./herdr-app.nix
   ];
 
   # sefe-only Claude Code extras: work MCP server + the ai-tooling-marketplace
