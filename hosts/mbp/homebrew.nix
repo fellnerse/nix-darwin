@@ -30,6 +30,7 @@
     "jetbrains-toolbox"
     "maccy"
     "obsidian"
+    "okta-verify"
     "signal"
     "slack"
     "spotify"
