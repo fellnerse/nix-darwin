@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 {
   # herdr is the Debian LXC (VMID 101, PVE) running the coding-agent runtime -
   # see docs/infrastructure/herdr-server.md. No nix-darwin/NixOS here, just a
@@ -99,6 +99,11 @@
     };
     Install.WantedBy = [ "timers.target" ];
   };
+
+  # herdr-core spawns $SHELL, which the systemd user manager pins to bash; force fish for new terminals
+  xdg.configFile."herdr-core/config.toml".text = ''
+    shell = ["${config.home.profileDirectory}/bin/fish", "-l"]
+  '';
 
   programs.home-manager.enable = true;
 
