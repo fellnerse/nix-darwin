@@ -57,6 +57,44 @@
     - URL-encode spaces and special characters in the link.
   '';
 
+  # Daily whatsanalyze prod check, ex herdr-mobile heartbeat. Silent on HEARTBEAT_OK;
+  # otherwise a herdr-app tab + email (needs ~/.config/heartbeat/resend-api-key, chmod 600).
+  systemd.user.services.heartbeat-whatsanalyze = {
+    Unit.Description = "Heartbeat: whatsanalyze live web stats check";
+    Service = {
+      Type = "oneshot";
+      TimeoutStartSec = "2h";
+      Environment = [
+        "HB_NAME=whatsanalyze"
+        "HB_CWD=/root/projects/whatsanalyze"
+        "HB_PROMPT_FILE=${./scripts/heartbeat-whatsanalyze.md}"
+        "HB_MAIL_FROM=whatsanalyze@sheep-it.sebastianfellner.de"
+        "HB_MAIL_TO=hey@sebastianfellner.de"
+      ];
+      ExecStart = lib.getExe (
+        pkgs.writeShellApplication {
+          name = "heartbeat";
+          runtimeInputs = with pkgs; [
+            coreutils
+            curl
+            findutils
+            gnugrep
+            jq
+          ];
+          text = builtins.readFile ./scripts/heartbeat.sh;
+        }
+      );
+    };
+  };
+  systemd.user.timers.heartbeat-whatsanalyze = {
+    Unit.Description = "Daily whatsanalyze heartbeat";
+    Timer = {
+      OnCalendar = "*-*-* 07:00:00";
+      Persistent = true; # catch up after downtime
+    };
+    Install.WantedBy = [ "timers.target" ];
+  };
+
   programs.home-manager.enable = true;
 
   programs.direnv = {
