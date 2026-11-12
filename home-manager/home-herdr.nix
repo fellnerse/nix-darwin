@@ -57,6 +57,11 @@
     - URL-encode spaces and special characters in the link.
   '';
 
+  # The folder `tailscale serve --https=8450 /root/share` publishes; tailscaled keeps that serve config itself
+  home.activation.phoneShareDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p /root/share
+  '';
+
   # Daily whatsanalyze prod check, ex herdr-mobile heartbeat. Silent on HEARTBEAT_OK;
   # otherwise a herdr-app tab + email (needs ~/.config/heartbeat/resend-api-key, chmod 600).
   systemd.user.services.heartbeat-whatsanalyze = {

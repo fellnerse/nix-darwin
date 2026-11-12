@@ -79,6 +79,20 @@ ssh herdr.tail "tailscale serve status"
 ssh herdr.tail "tailscale serve reset"
 ```
 
+### Phone Share Folder (Port 8450)
+
+Agents hand files to the phone by copying them into `/root/share/<date>-<topic>/` and printing
+`https://herdr.tail401ae4.ts.net:8450/<date>-<topic>/<file>`. The global `CLAUDE.md` tells them so
+(`home-manager/home-herdr.nix`), and the activation script creates the folder. The serve itself is
+not in Nix: `tailscaled` stores it in its state and restores it on boot. To recreate or remove it:
+
+```bash
+ssh herdr.tail "tailscale serve --bg --https=8450 /root/share"
+ssh herdr.tail "tailscale serve --https=8450 off"
+```
+
+Everything in `/root/share` is readable by every device the tailnet ACLs let reach `herdr`.
+
 ### Option B: Direct Connection
 
 - Connect to `http://herdr:3000` or `http://herdr.tail401ae4.ts.net:3000`.
