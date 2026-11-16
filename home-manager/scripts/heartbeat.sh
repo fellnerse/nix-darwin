@@ -1,25 +1,37 @@
-# Scheduled agent check (replaces herdr-mobile's heartbeats). Runs omp headless;
-# stays silent on HEARTBEAT_OK, otherwise opens the session as a herdr-app tab
+# Scheduled agent check (replaces herdr-mobile's heartbeats). Runs agy (Antigravity CLI) headless;
+# stays silent on HEARTBEAT_OK, otherwise opens the conversation as a herdr-app tab
 # and emails the answer. Configured via HB_NAME, HB_CWD, HB_PROMPT_FILE, HB_MAIL_FROM, HB_MAIL_TO.
 
-# omp and herdr-core live outside nix; gh/git for the PRs the agent opens
+# agy and herdr-core live outside nix; gh/git for the PRs the agent opens
 export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:$PATH"
 
 state="$HOME/.local/state/heartbeat/$HB_NAME"
-sessions="$state/sessions"
+json="$state/last.json"
 out="$state/last.txt"
-mkdir -p "$sessions"
-touch "$state/.start"
+mkdir -p "$state"
 cd "$HB_CWD"
 
-if omp --print --auto-approve --session-dir="$sessions" "$(<"$HB_PROMPT_FILE")" >"$out" 2>"$state/last.err"; then
-  # a line that is only the sentinel; hooks may print banners around it
+for attempt in 1 2 3; do
+  rc=0
+  agy --dangerously-skip-permissions --print-timeout 1h --output-format json \
+    -p "$(<"$HB_PROMPT_FILE")" >"$json" 2>"$state/last.err" || rc=$?
+  if [ "$rc" -eq 0 ] && [ "$(jq -r .status "$json" 2>/dev/null)" != SUCCESS ]; then rc=1; fi
+  # retry only Google being overloaded (429), not a used-up quota (that one says when it resets)
+  if [ "$rc" -eq 0 ] || [ "$attempt" -eq 3 ] || ! grep -qw '429' "$json" "$state/last.err" ||
+    grep -qiE 'quota will reset|exhausted your capacity|QUOTA_EXHAUSTED' "$json" "$state/last.err"; then break; fi
+  sleep 10m
+done
+conv=$(jq -r '.conversation_id // empty' "$json" 2>/dev/null || true)
+
+if [ "$rc" -eq 0 ]; then
+  jq -r .response "$json" >"$out"
+  # a line that is only the sentinel; the model may add whitespace around it
   if grep -qx '[[:space:]]*HEARTBEAT_OK[[:space:]]*' "$out"; then
     echo "HEARTBEAT_OK"
     exit 0
   fi
 else
-  { echo "Heartbeat $HB_NAME failed (omp exit $?)"; echo; tail -n 40 "$state/last.err"; } >"$out"
+  { echo "Heartbeat $HB_NAME failed (agy exit $rc, attempt $attempt)"; echo; tail -n 40 "$state/last.err" "$json"; } >"$out"
 fi
 cat "$out"
 
@@ -32,14 +44,13 @@ layout() { # herdr-app's sidebar/tab layout doc; with a JSON arg {value, version
 }
 
 tab=""
-session=$(find "$sessions" -name '*.jsonl' -newer "$state/.start" -printf '%T@ %p\n' | sort -n | tail -n1 | cut -d' ' -f2-)
-if [ -n "$session" ]; then
+if [ -n "$conv" ]; then
   # join the herdr-app space for this folder if there is one
   space=$(layout | jq -r --arg f "$HB_CWD" 'first(.result.value.spaces[]? | select(.folder == $f) | .id) // empty')
   labels=()
   [ -n "$space" ] && labels=(--label "herdr.space=$space")
   addr=$(herdr-core run --json --bg --no-parent --keep --name "hb-$HB_NAME-$(date +%m%d-%H%M)" \
-    --cwd "$HB_CWD" "${labels[@]}" omp --resume="$session" | jq -r .address)
+    --cwd "$HB_CWD" "${labels[@]}" agy --conversation "$conv" | jq -r .address)
   tab="🩺 heartbeat $(date '+%m-%d %H:%M')"
   # the app adds the tab on its own shortly after; then name it. Version-checked, so retry on a race.
   for _ in $(seq 15); do

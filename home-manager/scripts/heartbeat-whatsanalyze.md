@@ -1,4 +1,4 @@
-Run /live-web-stats-check, including its memory steps: read the earlier findings first, save new ones at the end.
+Follow the skill in /root/.claude/skills/live-web-stats-check/SKILL.md, including its memory steps: read the earlier findings first, save new ones at the end.
 
 Act on what you find:
 - A confirmed bug with a clear root cause and a small fix: fix it. Never in /root/projects/whatsanalyze itself - cut a worktree at /root/.herdr/worktrees/whatsanalyze/<branch> off origin/dev, commit, push, and open a PR against dev. Do not merge it. Put the PR number in the finding's memory.
