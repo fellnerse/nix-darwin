@@ -1,5 +1,5 @@
-property openApps : {"Slack", "Microsoft Teams", "Microsoft Outlook", "Obsidian", "Script Editor", "Bitwarden", "WhatsApp", "Signal", "Mail", "Zed", "Claude", "Zen"}
-property additionalCloseApps : {"Preview", "Sublime", "PowerPoint", "WhatsApp", "Signal", "Calendar", "Outlook", "Teams", "Script", "Finder", "Spotify", "Mail", "Monitor", "Word", "Excel", "Terminal", "Ghostty", "Microsoft Excel", "Herdr", "Tern", "TV", "Windows App", "Zed"}
+property openApps : {"Slack", "Microsoft Teams", "Microsoft Outlook", "Obsidian", "Bitwarden", "WhatsApp", "Signal", "Mail", "Zed", "Claude", "Zen"}
+property additionalCloseApps : {"Preview", "Sublime", "PowerPoint", "WhatsApp", "Signal", "Calendar", "Outlook", "Teams", "Script", "Finder", "Spotify", "Mail", "Monitor", "Word", "Excel", "Terminal", "Ghostty", "Microsoft Excel", "Herdr", "Tern", "TV", "Windows App", "Zed", "Delta"}
 
 on run
 	repeat with a in openApps
