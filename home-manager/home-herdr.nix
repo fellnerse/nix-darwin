@@ -62,7 +62,7 @@
     mkdir -p /root/share
   '';
 
-  # Daily whatsanalyze prod check, ex herdr-mobile heartbeat. Silent on HEARTBEAT_OK;
+  # Daily whatsanalyze prod check via agy, ex herdr-mobile heartbeat. Silent on HEARTBEAT_OK;
   # otherwise a herdr-app tab + email (needs ~/.config/heartbeat/resend-api-key, chmod 600).
   systemd.user.services.heartbeat-whatsanalyze = {
     Unit.Description = "Heartbeat: whatsanalyze live web stats check";
